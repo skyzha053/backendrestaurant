@@ -1,5 +1,6 @@
-package backendrestaurant.com.example.backendrestaurant;
+package backendrestaurant.com.example.backendrestaurant.Repository;
 
+import backendrestaurant.com.example.backendrestaurant.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

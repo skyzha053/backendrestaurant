@@ -1,5 +1,7 @@
-package backendrestaurant.com.example.backendrestaurant;
+package backendrestaurant.com.example.backendrestaurant.Service;
 
+import backendrestaurant.com.example.backendrestaurant.Drank;
+import backendrestaurant.com.example.backendrestaurant.Repository.DrankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

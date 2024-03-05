@@ -1,5 +1,7 @@
-package backendrestaurant.com.example.backendrestaurant;
+package backendrestaurant.com.example.backendrestaurant.Controller;
 
+import backendrestaurant.com.example.backendrestaurant.Factuur;
+import backendrestaurant.com.example.backendrestaurant.Service.FactuurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
