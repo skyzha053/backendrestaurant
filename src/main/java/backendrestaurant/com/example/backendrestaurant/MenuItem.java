@@ -16,7 +16,8 @@ public class MenuItem {
     private String name;
     private String description;
     private BigDecimal price;
-    private boolean available; // Nieuw veld om de beschikbaarheid bij te houden
+
+    private boolean available; // Add this field
 
     // Constructors, getters, setters, en andere benodigde methoden
 
@@ -52,11 +53,11 @@ public class MenuItem {
         this.price = price;
     }
 
-    public boolean isAvailable() {
-        return available;
-    }
-
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 }

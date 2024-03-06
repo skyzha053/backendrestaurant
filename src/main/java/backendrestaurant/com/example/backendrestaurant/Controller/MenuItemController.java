@@ -3,6 +3,8 @@ package backendrestaurant.com.example.backendrestaurant.Controller;
 import backendrestaurant.com.example.backendrestaurant.MenuItem;
 import backendrestaurant.com.example.backendrestaurant.Service.MenuItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,27 +22,53 @@ public class MenuItemController {
     }
 
     @GetMapping("/{id}")
-    public MenuItem getMenuItem(@PathVariable Long id) {
-        return menuItemService.getMenuItemById(id);
+    public ResponseEntity<?> getMenuItem(@PathVariable Long id) {
+        MenuItem menuItem = menuItemService.getMenuItemById(id);
+
+        if (menuItem != null) {
+            if (menuItem.isAvailable()) {
+                return ResponseEntity.ok().body(menuItem);
+            } else {
+                return ResponseEntity.status(HttpStatus.OK).body("Menu item is now unavailable.");
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item not found.");
+        }
     }
 
+
     @PostMapping
-    public MenuItem addMenuItem(@RequestBody MenuItem menuItem) {
-        return menuItemService.createMenuItem(menuItem);
+    public ResponseEntity<MenuItem> addMenuItem(@RequestBody MenuItem menuItem) {
+        MenuItem createdMenuItem = menuItemService.createMenuItem(menuItem);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdMenuItem);
     }
 
     @PutMapping("/{id}")
-    public MenuItem updateMenuItem(@PathVariable Long id, @RequestBody MenuItem updatedMenuItem) {
-        return menuItemService.updateMenuItem(id, updatedMenuItem);
+    public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @RequestBody MenuItem updatedMenuItem) {
+        MenuItem menuItem = menuItemService.updateMenuItem(id, updatedMenuItem);
+        return ResponseEntity.ok().body(menuItem);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteMenuItem(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
         menuItemService.deleteMenuItem(id);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}/block")
-    public MenuItem blockMenuItem(@PathVariable Long id) {
-        return menuItemService.blockMenuItem(id);
+    public ResponseEntity<String> blockMenuItem(@PathVariable Long id) {
+        String result = menuItemService.blockMenuItem(id);
+
+        if (result != null) {
+            if (result.equals("Menu item is now unavailable.")) {
+                return ResponseEntity.ok().body(result);
+            } else if (result.equals("Menu item is already unavailable.")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred.");
+        }
     }
 }
