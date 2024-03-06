@@ -1,4 +1,3 @@
-
 package backendrestaurant.com.example.backendrestaurant.Controller;
 
 import backendrestaurant.com.example.backendrestaurant.MenuItem;
@@ -38,5 +37,10 @@ public class MenuItemController {
     @DeleteMapping("/{id}")
     public void deleteMenuItem(@PathVariable Long id) {
         menuItemService.deleteMenuItem(id);
+    }
+
+    @PutMapping("/{id}/block")
+    public MenuItem blockMenuItem(@PathVariable Long id) {
+        return menuItemService.blockMenuItem(id);
     }
 }
