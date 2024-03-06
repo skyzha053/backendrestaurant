@@ -4,7 +4,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 public class MenuItem {
@@ -17,7 +19,10 @@ public class MenuItem {
     private String description;
     private BigDecimal price;
 
-    private boolean available; // Add this field
+    private boolean available;
+
+    @ManyToMany
+    private Set<Allergie> allergies; // Voeg dit veld toe
 
     // Constructors, getters, setters, en andere benodigde methoden
 
@@ -53,11 +58,19 @@ public class MenuItem {
         this.price = price;
     }
 
+    public boolean isAvailable() {
+        return available;
+    }
+
     public void setAvailable(boolean available) {
         this.available = available;
     }
 
-    public boolean isAvailable() {
-        return available;
+    public Set<Allergie> getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(Set<Allergie> allergies) {
+        this.allergies = allergies;
     }
 }
