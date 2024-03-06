@@ -26,16 +26,15 @@ public class MenuItemController {
         MenuItem menuItem = menuItemService.getMenuItemById(id);
 
         if (menuItem != null) {
-            if (menuItem.isAvailable()) {
-                return ResponseEntity.ok().body(menuItem);
+            if (!menuItem.isAvailable()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item is now unavailable.");
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body("Menu item is now unavailable.");
+                return ResponseEntity.ok().body(menuItem);
             }
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item not found.");
         }
     }
-
 
     @PostMapping
     public ResponseEntity<MenuItem> addMenuItem(@RequestBody MenuItem menuItem) {
