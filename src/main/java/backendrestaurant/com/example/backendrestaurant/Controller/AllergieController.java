@@ -1,6 +1,6 @@
 package backendrestaurant.com.example.backendrestaurant.Controller;
 
-import backendrestaurant.com.example.backendrestaurant.Allergie;
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,8 +34,4 @@ public class AllergieController {
         return allergieService.updateAllergie(id, updatedAllergie);
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteAllergie(@PathVariable Long id) {
-        allergieService.deleteAllergie(id);
-    }
 }

@@ -1,8 +1,10 @@
 package backendrestaurant.com.example.backendrestaurant.Repository;
 
-import backendrestaurant.com.example.backendrestaurant.Allergie;
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
+
 public interface AllergieRepository extends JpaRepository<Allergie, Long> {
-    // Aanvullende querymethoden kunnen hier worden toegevoegd indien nodig
+    List<Allergie> findByNaam(String naam);
 }

@@ -1,6 +1,6 @@
 package backendrestaurant.com.example.backendrestaurant.Service;
 
-import backendrestaurant.com.example.backendrestaurant.Allergie;
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Repository.AllergieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,14 +26,23 @@ public class AllergieService {
     }
 
     public Allergie updateAllergie(Long id, Allergie updatedAllergie) {
-        if (allergieRepository.existsById(id)) {
-            updatedAllergie.setId(id);
-            return allergieRepository.save(updatedAllergie);
-        }
-        return null;
+        return allergieRepository.findById(id)
+                .map(existingAllergie -> {
+                    updatedAllergie.setId(existingAllergie.getId());
+                    return allergieRepository.save(updatedAllergie);
+                })
+                .orElse(null);
     }
 
-    public void deleteAllergie(Long id) {
-        allergieRepository.deleteById(id);
+    public Allergie getByName(String name) {
+        List<Allergie> allergenList = allergieRepository.findByNaam(name);
+
+        // Check if the allergens are found
+        if (!allergenList.isEmpty()) {
+            // Assuming you want to return the first found allergen
+            return allergenList.get(0);
+        }
+
+        return null; // Return null if no allergen is found
     }
 }
