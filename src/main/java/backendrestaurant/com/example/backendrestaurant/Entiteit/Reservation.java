@@ -1,4 +1,4 @@
-package backendrestaurant.com.example.backendrestaurant;
+package backendrestaurant.com.example.backendrestaurant.Entiteit;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;

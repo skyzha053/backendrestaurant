@@ -1,11 +1,8 @@
-package backendrestaurant.com.example.backendrestaurant;
+package backendrestaurant.com.example.backendrestaurant.Entiteit;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -21,10 +18,10 @@ public class MenuItem {
 
     private boolean available;
 
-    @ManyToMany
-    private Set<Allergie> allergies; // Voeg dit veld toe
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private Set<Allergie> allergenen = new HashSet<>();
 
-    // Constructors, getters, setters, en andere benodigde methoden
+    // Constructors, getters, setters, and other necessary methods
 
     public Long getId() {
         return id;
@@ -66,11 +63,26 @@ public class MenuItem {
         this.available = available;
     }
 
-    public Set<Allergie> getAllergies() {
-        return allergies;
+    public Set<Allergie> getAllergenen() {
+        return allergenen;
     }
 
-    public void setAllergies(Set<Allergie> allergies) {
-        this.allergies = allergies;
+    public void setAllergenen(Set<Allergie> allergenen) {
+        this.allergenen = allergenen;
+    }
+
+    // Additional methods added
+    public void addAllergie(Allergie allergie) {
+        if (allergie != null) {
+            allergenen.add(allergie);
+            allergie.getMenuItems().add(this);
+        }
+    }
+
+    public void removeAllergie(Allergie allergie) {
+        if (allergie != null) {
+            allergenen.remove(allergie);
+            allergie.getMenuItems().remove(this);
+        }
     }
 }
