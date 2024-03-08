@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.Collections;
 
 @Service
 public class MenuItemService {
@@ -34,15 +35,18 @@ public class MenuItemService {
             allergieRepository.save(allergie);
         }
 
-        // Nu backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem opslaan
+        // Nu backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem opslaan zonder allergenen
+        menuItem.setAllergenen(Collections.emptySet()); // Allergenen leeg maken om oneindige loop te voorkomen
         MenuItem savedMenuItem = menuItemRepository.save(menuItem); // Zorg ervoor dat menuItem nu een ID heeft
 
         // Zet het toegewezen ID terug in het oorspronkelijke object
         menuItem.setId(savedMenuItem.getId());
 
-        // Update het menu-item in de database met het toegewezen ID
+        // Voeg allergenen weer toe en update het menu-item in de database
+        menuItem.setAllergenen(savedMenuItem.getAllergenen());
         return menuItemRepository.save(menuItem);
     }
+
 
     public void removeMenuItemFromAllergies(Long menuItemId) {
         Optional<MenuItem> optionalMenuItem = menuItemRepository.findById(menuItemId);
