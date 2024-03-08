@@ -5,9 +5,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.HashMap;
+
+import java.util.Arrays;
+
+import java.util.stream.Collectors;
 
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
@@ -15,10 +23,8 @@ import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
 import backendrestaurant.com.example.backendrestaurant.Service.MenuItemService;
 
 @RestController
-@RequestMapping("/menuItems")
+@RequestMapping("/menuItems/all")
 public class MenuItemController {
-
-    private static final Logger log = Logger.getLogger(MenuItemController.class.getName());
 
     @Autowired
     private MenuItemService menuItemService;
@@ -26,12 +32,9 @@ public class MenuItemController {
     @Autowired
     private AllergieService allergieService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<MenuItem>> getAllMenuItems() {
-        List<MenuItem> menuItems = menuItemService.getAllMenuItems();
-        // Aangepast logbericht
-        log.log(Level.INFO, "Retrieved {0} menu items from the database.", menuItems.size());
-        return ResponseEntity.ok(menuItems);
+    @GetMapping
+    public List<MenuItem> getAllMenuItems() {
+        return menuItemService.getAllMenuItems();
     }
 
     @GetMapping("/{id}")
@@ -49,6 +52,7 @@ public class MenuItemController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item not found.");
         }
     }
+
 
     @PostMapping("/create")
     public ResponseEntity<MenuItem> createMenuItem(@RequestBody MenuItem menuItem) {
