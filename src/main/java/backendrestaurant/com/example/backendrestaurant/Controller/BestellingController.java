@@ -13,7 +13,7 @@ import backendrestaurant.com.example.backendrestaurant.Repository.DrankRepositor
 import backendrestaurant.com.example.backendrestaurant.Repository.MenuItemRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.TafelRepository;
 import backendrestaurant.com.example.backendrestaurant.Service.BestellingService; // Import your service
-
+import backendrestaurant.com.example.backendrestaurant.Entiteit.TafelUpdateRequest;
 @RestController
 public class BestellingController {
 
@@ -38,6 +38,18 @@ public class BestellingController {
 
         return new ResponseEntity<>("Bestelling geplaatst", HttpStatus.CREATED);
     }
+    @PostMapping("/tefel-verplaatsen")
+    public ResponseEntity<String> updateTafel(@RequestBody TafelUpdateRequest tafelUpdateRequest) {
+        Tafel tafel = bestellingService.updateTafel(
+                tafelUpdateRequest.getTafelNaam(),
+                tafelUpdateRequest.getNieuweNaam()
+        );
 
+        if (tafel != null) {
+            return new ResponseEntity<>("Tafel bijgewerkt", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Tafel niet gevonden", HttpStatus.NOT_FOUND);
+        }
+    }
 
 }

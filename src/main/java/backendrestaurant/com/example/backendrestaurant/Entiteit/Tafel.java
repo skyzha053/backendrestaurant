@@ -9,6 +9,7 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import java.math.BigDecimal;  // Add this import statement
 import java.util.List;
 
 @Entity
@@ -55,6 +56,16 @@ public class Tafel {
 
     public void setBesteldeItems(List<BesteldItem> besteldeItems) {
         this.besteldeItems = besteldeItems;
+    }
+
+    private BigDecimal totalePrijs;
+
+    public BigDecimal getTotalePrijs() {
+        return totalePrijs;
+    }
+
+    public void setTotalePrijs(BigDecimal totalePrijs) {
+        this.totalePrijs = totalePrijs;
     }
 
     // Other getters and setters as needed...

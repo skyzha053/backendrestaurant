@@ -95,4 +95,18 @@ public class BestellingService {
 
         return besteldItem;
     }
+
+    public Tafel updateTafel(String tafelNaam, String nieuweNaam) {
+        Optional<Tafel> optionalTafel = tafelRepository.findByNaam(tafelNaam);
+
+        if (optionalTafel.isPresent()) {
+            Tafel tafel = optionalTafel.get();
+            tafel.setNaam(nieuweNaam);
+            tafelRepository.save(tafel);
+            return tafel;
+        } else {
+            return null;
+        }
+    }
+
 }
