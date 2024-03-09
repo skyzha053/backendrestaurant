@@ -1,8 +1,11 @@
 package backendrestaurant.com.example.backendrestaurant.Repository;
 
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank; // Correct import
+
+import java.util.Optional;
+
 public interface DrankRepository extends JpaRepository<Drank, Long> {
-    // Aanvullende querymethoden kunnen hier worden toegevoegd indien nodig
+   Optional<Drank> findByNaam(String naam);
 }
