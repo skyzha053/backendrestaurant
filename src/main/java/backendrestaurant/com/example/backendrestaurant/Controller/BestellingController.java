@@ -3,9 +3,8 @@ package backendrestaurant.com.example.backendrestaurant.Controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
 
 import backendrestaurant.com.example.backendrestaurant.Entiteit.BestellingRequest;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Tafel;
@@ -39,7 +38,7 @@ public class BestellingController {
         return new ResponseEntity<>("Bestelling geplaatst", HttpStatus.CREATED);
     }
     @PostMapping("/tefel-verplaatsen")
-    public ResponseEntity<String> updateTafel(@RequestBody TafelUpdateRequest tafelUpdateRequest) {
+    public ResponseEntity<String> updateTafelNaam(@RequestBody TafelUpdateRequest tafelUpdateRequest) {
         Tafel tafel = bestellingService.updateTafel(
                 tafelUpdateRequest.getTafelNaam(),
                 tafelUpdateRequest.getNieuweNaam()
@@ -51,5 +50,15 @@ public class BestellingController {
             return new ResponseEntity<>("Tafel niet gevonden", HttpStatus.NOT_FOUND);
         }
     }
+
+    @PutMapping("/update-bestelling")
+    public ResponseEntity<String> updateBestelling(@RequestBody Map<String, Object> payload) {
+        String tafelNaam = (String) payload.get("tafelNaam");
+        String itemName = (String) payload.get("itemName");
+        int hoeveelheid = (int) payload.get("hoeveelheid");
+
+        return bestellingService.updateBestelling(tafelNaam, itemName, hoeveelheid);
+    }
+
 
 }

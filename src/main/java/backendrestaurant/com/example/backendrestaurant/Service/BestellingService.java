@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;  // Import BigDecimal
 import java.util.List;
 import java.util.Optional;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 
 import backendrestaurant.com.example.backendrestaurant.Entiteit.BesteldItem;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank;
@@ -77,13 +79,13 @@ public class BestellingService {
         besteldItem.setMenuItem(menuItem);
         besteldItem.setHoeveelheid(hoeveelheid);
         besteldItem.setPrijs(prijs);
-        besteldItem.setItemNaam(menuItem.getName()); // Zet de itemNaam op basis van menuItem
+        besteldItem.setItemNaam(menuItem.getName());
 
         return besteldItem;
     }
 
     private BesteldItem createBesteldItem(Tafel tafel, Drank drank, int hoeveelheid) {
-        // Implementeer de logica om de prijs in te stellen op basis van drank en hoeveelheid
+
         BigDecimal prijs = drank.getPrijs().multiply(BigDecimal.valueOf(hoeveelheid));
 
         BesteldItem besteldItem = new BesteldItem();
@@ -91,7 +93,7 @@ public class BestellingService {
         besteldItem.setDrank(drank);
         besteldItem.setHoeveelheid(hoeveelheid);
         besteldItem.setPrijs(prijs);
-        besteldItem.setItemNaam(drank.getNaam()); // Zet de itemNaam op basis van drank
+        besteldItem.setItemNaam(drank.getNaam());
 
         return besteldItem;
     }
@@ -108,5 +110,51 @@ public class BestellingService {
             return null;
         }
     }
+
+    public ResponseEntity<String> updateBestelling(String tafelNaam, String itemName, int hoeveelheid) {
+
+        Optional<Tafel> optionalTafel = tafelRepository.findByNaam(tafelNaam);
+
+        if (optionalTafel.isPresent()) {
+            Tafel tafel = optionalTafel.get();
+
+            Optional<MenuItem> optionalMenuItem = menuItemRepository.findByName(itemName);
+            Optional<Drank> optionalDrank = drankRepository.findByNaam(itemName);
+
+            if (optionalMenuItem.isPresent() || optionalDrank.isPresent()) {
+                BigDecimal prijs;
+                if (optionalMenuItem.isPresent()) {
+                    prijs = optionalMenuItem.get().getPrice();
+                } else {
+                    prijs = optionalDrank.get().getPrijs();
+                }
+
+
+                Optional<BesteldItem> optionalBesteldItem = besteldItemRepository.findByTafelAndItemNaam(tafel, itemName);
+                if (optionalBesteldItem.isPresent()) {
+
+                    BesteldItem besteldItem = optionalBesteldItem.get();
+                    besteldItem.setHoeveelheid(besteldItem.getHoeveelheid() + hoeveelheid);
+                    besteldItem.setPrijs(prijs.multiply(BigDecimal.valueOf(besteldItem.getHoeveelheid())));
+                    besteldItemRepository.save(besteldItem);
+                } else {
+
+                    BesteldItem besteldItem = new BesteldItem();
+                    besteldItem.setTafel(tafel);
+                    besteldItem.setItemNaam(itemName);
+                    besteldItem.setHoeveelheid(hoeveelheid);
+                    besteldItem.setPrijs(prijs.multiply(BigDecimal.valueOf(hoeveelheid)));
+                    besteldItemRepository.save(besteldItem);
+                }
+
+                return new ResponseEntity<>("Bestelling bijgewerkt", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Item niet gevonden", HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>("Tafel niet gevonden", HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
