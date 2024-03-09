@@ -3,6 +3,8 @@ package backendrestaurant.com.example.backendrestaurant.Repository;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface MenuItemRepository extends JpaRepository<MenuItem, Long> {
-    // Aanvullende methoden kunnen hier worden toegevoegd indien nodig
+    Optional<MenuItem> findByName(String name);
 }
