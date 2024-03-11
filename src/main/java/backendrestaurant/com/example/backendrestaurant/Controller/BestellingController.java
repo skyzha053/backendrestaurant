@@ -37,7 +37,7 @@ public class BestellingController {
 
         return new ResponseEntity<>("Bestelling geplaatst", HttpStatus.CREATED);
     }
-    @PostMapping("/tefel-verplaatsen")
+    @PostMapping("/tafel-verplaatsen")
     public ResponseEntity<String> updateTafelNaam(@RequestBody TafelUpdateRequest tafelUpdateRequest) {
         Tafel tafel = bestellingService.updateTafel(
                 tafelUpdateRequest.getTafelNaam(),
