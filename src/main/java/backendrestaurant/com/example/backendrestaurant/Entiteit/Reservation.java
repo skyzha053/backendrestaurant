@@ -4,31 +4,38 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 public class Reservation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String guestName;
-    private LocalDateTime reservationDateTime;
-    private int numberOfGuests;
+    private String name;
+    private int numberOfPersons;
+    private LocalDate reservationDate;
+    private String allergies;
+    private String comments;
+    private String phoneNumber;
+    private String emailAddress;
 
     // Constructors
     public Reservation() {
-        // Default constructor required by JPA
+        // default constructor
     }
 
-    public Reservation(String guestName, LocalDateTime reservationDateTime, int numberOfGuests) {
-        this.guestName = guestName;
-        this.reservationDateTime = reservationDateTime;
-        this.numberOfGuests = numberOfGuests;
+    public Reservation(String name, int numberOfPersons, LocalDate reservationDate, String allergies, String comments, String phoneNumber, String emailAddress) {
+        this.name = name;
+        this.numberOfPersons = numberOfPersons;
+        this.reservationDate = reservationDate;
+        this.allergies = allergies;
+        this.comments = comments;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
     }
 
-    // Getters and Setters
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -37,29 +44,59 @@ public class Reservation {
         this.id = id;
     }
 
-    public String getGuestName() {
-        return guestName;
+    public String getName() {
+        return name;
     }
 
-    public void setGuestName(String guestName) {
-        this.guestName = guestName;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public LocalDateTime getReservationDateTime() {
-        return reservationDateTime;
+    public int getNumberOfPersons() {
+        return numberOfPersons;
     }
 
-    public void setReservationDateTime(LocalDateTime reservationDateTime) {
-        this.reservationDateTime = reservationDateTime;
+    public void setNumberOfPersons(int numberOfPersons) {
+        this.numberOfPersons = numberOfPersons;
     }
 
-    public int getNumberOfGuests() {
-        return numberOfGuests;
+    public LocalDate getReservationDate() {
+        return reservationDate;
     }
 
-    public void setNumberOfGuests(int numberOfGuests) {
-        this.numberOfGuests = numberOfGuests;
+    public void setReservationDate(LocalDate reservationDate) {
+        this.reservationDate = reservationDate;
     }
 
-    // Additional methods if needed
+    public String getAllergies() {
+        return allergies;
+    }
+
+    public void setAllergies(String allergies) {
+        this.allergies = allergies;
+    }
+
+    public String getComments() {
+        return comments;
+    }
+
+    public void setComments(String comments) {
+        this.comments = comments;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 }
