@@ -56,6 +56,7 @@ public class BestellingService {
                 besteldItemRepository.save(besteldMenuItem);
             }
         }
+        updateTotalePrijs(tafel);
     }
 
     public void processDranken(List<BesteldItem> besteldeDranken, Tafel tafel) {
@@ -68,6 +69,19 @@ public class BestellingService {
                 besteldItemRepository.save(besteldDrank);
             }
         }
+        updateTotalePrijs(tafel);
+    }
+
+    private void updateTotalePrijs(Tafel tafel) {
+        List<BesteldItem> besteldeItems = besteldItemRepository.findByTafel(tafel);
+        BigDecimal totalePrijs = BigDecimal.ZERO;
+
+        for (BesteldItem besteldItem : besteldeItems) {
+            totalePrijs = totalePrijs.add(besteldItem.getPrijs());
+        }
+
+        tafel.setTotalePrijs(totalePrijs);
+        tafelRepository.save(tafel);
     }
 
     private BesteldItem createBesteldItem(Tafel tafel, MenuItem menuItem, int hoeveelheid) {
