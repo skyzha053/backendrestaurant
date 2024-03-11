@@ -1,6 +1,6 @@
 package backendrestaurant.com.example.backendrestaurant.Service;
 
-import backendrestaurant.com.example.backendrestaurant.Reservation;
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Reservation;
 import backendrestaurant.com.example.backendrestaurant.Repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +35,9 @@ public class ReservationService {
             reservation.setReservationDate(updatedReservation.getReservationDate());
             reservation.setAllergies(updatedReservation.getAllergies());
             reservation.setComments(updatedReservation.getComments());
+
+            // Update bedrijfsnaam
+            reservation.setBedrijfsnaam(updatedReservation.getBedrijfsnaam());
 
             return reservationRepository.save(reservation);
         } else {
