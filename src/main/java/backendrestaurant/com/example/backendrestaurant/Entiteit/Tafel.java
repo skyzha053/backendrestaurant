@@ -21,7 +21,7 @@ public class Tafel {
 
     private String naam;
 
-    @OneToMany(mappedBy = "tafel", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "tafel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BesteldItem> besteldeItems;
 
     // Constructors, getters, and setters...
