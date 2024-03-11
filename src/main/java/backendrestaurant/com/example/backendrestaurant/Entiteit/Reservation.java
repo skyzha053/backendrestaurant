@@ -1,4 +1,4 @@
-package backendrestaurant.com.example.backendrestaurant;
+package backendrestaurant.com.example.backendrestaurant.Entiteit;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,12 +20,14 @@ public class Reservation {
     private String phoneNumber;
     private String emailAddress;
 
+    private String bedrijfsnaam; // New field for company name
+
     // Constructors
     public Reservation() {
         // default constructor
     }
 
-    public Reservation(String name, int numberOfPersons, LocalDate reservationDate, String allergies, String comments, String phoneNumber, String emailAddress) {
+    public Reservation(String name, int numberOfPersons, LocalDate reservationDate, String allergies, String comments, String phoneNumber, String emailAddress, String bedrijfsnaam) {
         this.name = name;
         this.numberOfPersons = numberOfPersons;
         this.reservationDate = reservationDate;
@@ -33,6 +35,7 @@ public class Reservation {
         this.comments = comments;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
+        this.bedrijfsnaam = bedrijfsnaam;
     }
 
     // Getters and setters
@@ -98,5 +101,13 @@ public class Reservation {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public String getBedrijfsnaam() {
+        return bedrijfsnaam;
+    }
+
+    public void setBedrijfsnaam(String bedrijfsnaam) {
+        this.bedrijfsnaam = bedrijfsnaam;
     }
 }
