@@ -1,6 +1,6 @@
 package backendrestaurant.com.example.backendrestaurant.Controller;
 
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Reservation;
+import backendrestaurant.com.example.backendrestaurant.Reservation;
 import backendrestaurant.com.example.backendrestaurant.Service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package backendrestaurant.com.example.backendrestaurant.Repository;
 
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Reservation;
+import backendrestaurant.com.example.backendrestaurant.Reservation;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
