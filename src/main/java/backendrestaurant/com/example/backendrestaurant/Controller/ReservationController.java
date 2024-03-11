@@ -1,49 +1,72 @@
 package backendrestaurant.com.example.backendrestaurant.Controller;
 
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Reservation;
+import backendrestaurant.com.example.backendrestaurant.Reservation;
 import backendrestaurant.com.example.backendrestaurant.Service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
+import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationController {
-
     @Autowired
     private ReservationService reservationService;
 
-    @GetMapping
-    public ResponseEntity<List<Reservation>> getAllReservations() {
-        List<Reservation> reservations = reservationService.getAllReservations();
-        return new ResponseEntity<>(reservations, HttpStatus.OK);
-    }
-
-    @GetMapping("/{reservationId}")
-    public ResponseEntity<Reservation> getReservationById(@PathVariable Long reservationId) {
-        Reservation reservation = reservationService.getReservationById(reservationId);
-        return new ResponseEntity<>(reservation, HttpStatus.OK);
-    }
-
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
+        // Set the current date if the reservation date is not provided in the request
+        if (reservation.getReservationDate() == null) {
+            reservation.setReservationDate(LocalDate.now());
+        }
+
+        // Set the default email only if it is not provided in the request
+        if (reservation.getEmailAddress() == null || reservation.getEmailAddress().isEmpty()) {
+            // Set the default email (replace with your logic)
+            reservation.setEmailAddress("default@example.com");
+        }
+
+        // Set the default phone number only if it is not provided in the request
+        if (reservation.getPhoneNumber() == null || reservation.getPhoneNumber().isEmpty()) {
+            // Set the default phone number (replace with your logic)
+            reservation.setPhoneNumber("123456789");
+        }
+
+        // Implement logic to create a new reservation
         Reservation createdReservation = reservationService.createReservation(reservation);
+
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
     }
 
-    @PutMapping("/{reservationId}")
-    public ResponseEntity<Reservation> updateReservation(
-            @PathVariable Long reservationId, @RequestBody Reservation reservation) {
-        Reservation updatedReservation = reservationService.updateReservation(reservationId, reservation);
-        return new ResponseEntity<>(updatedReservation, HttpStatus.OK);
+
+
+
+    @PutMapping("/updateReservationByName/{name}")
+    public ResponseEntity<Reservation> updateReservationByName(
+            @PathVariable String name,
+            @RequestBody Reservation updatedReservation
+    ) {
+        Reservation updated = reservationService.updateReservationByName(name, updatedReservation);
+
+        if (updated != null) {
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @DeleteMapping("/{reservationId}")
-    public ResponseEntity<Void> deleteReservation(@PathVariable Long reservationId) {
-        reservationService.deleteReservation(reservationId);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    @DeleteMapping("/deleteByName/{name}")
+    public ResponseEntity<Void> deleteReservationByName(@PathVariable String name) {
+        // Implement logic to delete a reservation by name
+        boolean deleted = reservationService.deleteReservationByName(name);
+
+        if (deleted) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
+
 }
