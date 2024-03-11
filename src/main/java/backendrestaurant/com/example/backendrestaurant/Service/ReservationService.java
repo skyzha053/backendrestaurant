@@ -1,14 +1,15 @@
 package backendrestaurant.com.example.backendrestaurant.Service;
+
+import backendrestaurant.com.example.backendrestaurant.Reservation;
 import backendrestaurant.com.example.backendrestaurant.Repository.ReservationRepository;
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReservationService {
-
     @Autowired
     private ReservationRepository reservationRepository;
 
@@ -16,30 +17,48 @@ public class ReservationService {
         return reservationRepository.findAll();
     }
 
-    public Reservation getReservationById(Long reservationId) {
-        return reservationRepository.findById(reservationId)
-                .orElseThrow(() -> new RuntimeException("Reservering niet gevonden met ID: " + reservationId));
+    public Optional<Reservation> getReservationById(Long id) {
+        return reservationRepository.findById(id);
     }
 
     public Reservation createReservation(Reservation reservation) {
-        // Voeg hier indien nodig aanvullende validaties toe
         return reservationRepository.save(reservation);
     }
 
-    public Reservation updateReservation(Long reservationId, Reservation updatedReservation) {
-        Reservation existingReservation = getReservationById(reservationId);
+    public Reservation updateReservationByName(String name, Reservation updatedReservation) {
+        Optional<Reservation> existingReservation = reservationRepository.findByName(name);
 
-        // Update de velden van de bestaande reservering met de nieuwe waarden
-        existingReservation.setGuestName(updatedReservation.getGuestName());
-        existingReservation.setReservationDateTime(updatedReservation.getReservationDateTime());
-        existingReservation.setNumberOfGuests(updatedReservation.getNumberOfGuests());
+        if (existingReservation.isPresent()) {
+            Reservation reservation = existingReservation.get();
+            // Update fields as needed
+            reservation.setNumberOfPersons(updatedReservation.getNumberOfPersons());
+            reservation.setReservationDate(updatedReservation.getReservationDate());
+            reservation.setAllergies(updatedReservation.getAllergies());
+            reservation.setComments(updatedReservation.getComments());
 
-        // Voeg hier indien nodig aanvullende validaties toe
-        return reservationRepository.save(existingReservation);
+            return reservationRepository.save(reservation);
+        } else {
+            return null; // Handle not found scenario
+        }
     }
 
-    public void deleteReservation(Long reservationId) {
-        Reservation existingReservation = getReservationById(reservationId);
-        reservationRepository.delete(existingReservation);
+    public boolean deleteReservation(Long id) {
+        if (reservationRepository.existsById(id)) {
+            reservationRepository.deleteById(id);
+            return true;
+        } else {
+            return false; // Handle not found scenario
+        }
+    }
+
+    public boolean deleteReservationByName(String name) {
+        Optional<Reservation> existingReservation = reservationRepository.findByName(name);
+
+        if (existingReservation.isPresent()) {
+            reservationRepository.delete(existingReservation.get());
+            return true;
+        } else {
+            return false;
+        }
     }
 }
