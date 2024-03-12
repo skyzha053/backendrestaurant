@@ -14,13 +14,27 @@ public class BesteldItem {
     @JoinColumn(name = "tafel_id")
     private Tafel tafel;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "drank_id")
+    private Drank drank;
+
     @ManyToOne
+    @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
 
     @ManyToOne
-    private Drank drank;
+    @JoinColumn(name = "factuur_id")
+    private Factuur factuur;
 
+
+    @ManyToOne
+    @JoinColumn(name = "bon_id")
+    private Bon bon;
+
+    @Column(name = "hoeveelheid")
     private int hoeveelheid;
+
+    @Column(name = "prijs")
     private BigDecimal prijs;
 
     @Column(name = "item_naam")
@@ -28,59 +42,63 @@ public class BesteldItem {
 
     // Constructors, getters, setters
 
-    public Long getId() {
-        return id;
+    public boolean isDrank() {
+        return this.drank != null;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public boolean isMenuItem() {
+        return this.menuItem != null;
     }
 
-    public Tafel getTafel() {
-        return tafel;
+    public int getHoeveelheid() {
+        return this.hoeveelheid;
+    }
+
+    public Drank getDrank() {
+        // Implement the logic to return the Drank entity associated with this BesteldItem
+        return drank;
+    }
+
+    public MenuItem getMenuItem() {
+        // Implement the logic to return the MenuItem entity associated with this BesteldItem
+        return menuItem;
+    }
+    public String getItemNaam() {
+        return this.itemNaam;
     }
 
     public void setTafel(Tafel tafel) {
         this.tafel = tafel;
     }
 
-    public MenuItem getMenuItem() {
-        return menuItem;
-    }
-
-    public void setMenuItem(MenuItem menuItem) {
-        this.menuItem = menuItem;
-    }
-
-    public Drank getDrank() {
-        return drank;
-    }
-
-    public void setDrank(Drank drank) {
-        this.drank = drank;
-    }
-
-    public int getHoeveelheid() {
-        return hoeveelheid;
-    }
-
     public void setHoeveelheid(int hoeveelheid) {
         this.hoeveelheid = hoeveelheid;
-    }
-
-    public BigDecimal getPrijs() {
-        return prijs;
     }
 
     public void setPrijs(BigDecimal prijs) {
         this.prijs = prijs;
     }
 
-    public String getItemNaam() {
-        return itemNaam;
-    }
-
     public void setItemNaam(String itemNaam) {
         this.itemNaam = itemNaam;
     }
+
+    public void setDrank(Drank drank) {
+        this.drank = drank;
+    }
+
+    public void setMenuItem(MenuItem menuItem) {
+        this.menuItem = menuItem;
+    }
+
+    public BigDecimal getPrijs() {
+        return this.prijs;
+    }
+
+    public void setFactuur(Factuur factuur) {
+        this.factuur = factuur;
+    }
+    public void setBon(Bon bon) { this.bon = bon;}
+
+
 }

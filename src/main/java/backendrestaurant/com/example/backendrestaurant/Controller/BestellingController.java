@@ -28,15 +28,13 @@ public class BestellingController {
     @Autowired
     private BestellingService bestellingService; // Inject your service
 
-    @PostMapping("/plaats-bestelling")
+
+    @PostMapping("/plaatsen")
     public ResponseEntity<String> plaatsBestelling(@RequestBody BestellingRequest bestellingRequest) {
-        Tafel tafel = bestellingService.createOrUpdateTafel(bestellingRequest.getTafelNaam());
-
-        bestellingService.processMenuItems(bestellingRequest.getBesteldeMenuItems(), tafel);
-        bestellingService.processDranken(bestellingRequest.getBesteldeDranken(), tafel);
-
-        return new ResponseEntity<>("Bestelling geplaatst", HttpStatus.CREATED);
+        return bestellingService.plaatsBestelling(bestellingRequest);
     }
+
+
     @PostMapping("/tafel-verplaatsen")
     public ResponseEntity<String> updateTafelNaam(@RequestBody TafelUpdateRequest tafelUpdateRequest) {
         Tafel tafel = bestellingService.updateTafel(
