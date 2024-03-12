@@ -21,6 +21,8 @@ public class Tafel {
 
     private String naam;
 
+    private boolean paid;
+
     @OneToMany(mappedBy = "tafel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BesteldItem> besteldeItems;
 
@@ -68,5 +70,12 @@ public class Tafel {
         this.totalePrijs = totalePrijs;
     }
 
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public void setPaid(boolean paid) {
+        this.paid = paid;
+    }
     // Other getters and setters as needed...
 }

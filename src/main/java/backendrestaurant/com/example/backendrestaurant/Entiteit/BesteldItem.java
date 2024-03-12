@@ -14,7 +14,7 @@ public class BesteldItem {
     @JoinColumn(name = "tafel_id")
     private Tafel tafel;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "drank_id")
     private Drank drank;
 
@@ -25,6 +25,11 @@ public class BesteldItem {
     @ManyToOne
     @JoinColumn(name = "factuur_id")
     private Factuur factuur;
+
+
+    @ManyToOne
+    @JoinColumn(name = "bon_id")
+    private Bon bon;
 
     @Column(name = "hoeveelheid")
     private int hoeveelheid;
@@ -49,6 +54,15 @@ public class BesteldItem {
         return this.hoeveelheid;
     }
 
+    public Drank getDrank() {
+        // Implement the logic to return the Drank entity associated with this BesteldItem
+        return drank;
+    }
+
+    public MenuItem getMenuItem() {
+        // Implement the logic to return the MenuItem entity associated with this BesteldItem
+        return menuItem;
+    }
     public String getItemNaam() {
         return this.itemNaam;
     }
@@ -84,4 +98,7 @@ public class BesteldItem {
     public void setFactuur(Factuur factuur) {
         this.factuur = factuur;
     }
+    public void setBon(Bon bon) { this.bon = bon;}
+
+
 }

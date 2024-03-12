@@ -55,12 +55,11 @@ public class BestellingService {
         Tafel tafel = createOrUpdateTafel(tafelNaam);
 
         // Verwerk zowel menu-items als dranken
-        processItems(besteldeMenuItems, tafel, false);
-        processItems(besteldeDranken, tafel, true);
+        processMenuItems(besteldeMenuItems, tafel);
+        processDranken(besteldeDranken, tafel);
 
         return new ResponseEntity<>("Bestelling geplaatst voor tafel " + tafelNaam, HttpStatus.OK);
     }
-
 
 
     public Tafel createOrUpdateTafel(String tafelNaam) {
@@ -111,36 +110,27 @@ public class BestellingService {
         return besteldItem;
     }
 
-
     private void updateTotalePrijs(Tafel tafel) {
-        // Check if there is an existing Factuur for the given tafel
-        Factuur existingFactuur = factuurRepository.findByTafel(tafel);
-
-        if (existingFactuur == null) {
-            // Create a new Factuur instance if none exists
-            existingFactuur = new Factuur();
-            existingFactuur.setTafel(tafel);
-        } else {
-            // Remove existing BesteldItems from the factuur
-            existingFactuur.getBesteldeItems().clear();
-        }
-
         List<BesteldItem> besteldeItems = besteldItemRepository.findByTafel(tafel);
         BigDecimal totalePrijs = BigDecimal.ZERO;
+
+        // Create a new Factuur instance
+        Factuur factuur = new Factuur();
+        factuur.setTafel(tafel);
 
         // Calculate totale prijs and associate items with the factuur
         for (BesteldItem besteldItem : besteldeItems) {
             totalePrijs = totalePrijs.add(besteldItem.getPrijs());
-            besteldItem.setFactuur(existingFactuur);
-            existingFactuur.getBesteldeItems().add(besteldItem);
+            besteldItem.setFactuur(factuur);
+            factuur.getBesteldeItems().add(besteldItem);
         }
 
         // Set the totale prijs for the factuur en tafel
-        existingFactuur.setTotalePrijs(totalePrijs);
+        factuur.setTotalePrijs(totalePrijs);
         tafel.setTotalePrijs(totalePrijs);
 
         // Save the factuur (and cascade to besteldeItems) and update tafel
-        factuurRepository.save(existingFactuur);
+        factuurRepository.save(factuur);
         tafelRepository.save(tafel);
 
         // Note: Since besteldItemRepository.findByTafel(tafel) returns a new list, we need to fetch
@@ -149,11 +139,10 @@ public class BestellingService {
 
         // Update the factuur reference for each BesteldItem
         for (BesteldItem besteldItem : besteldeItems) {
-            besteldItem.setFactuur(existingFactuur);
+            besteldItem.setFactuur(factuur);
             besteldItemRepository.save(besteldItem);
         }
     }
-
 
     public Tafel updateTafel(String tafelNaam, String nieuweNaam) {
         Optional<Tafel> optionalTafel = tafelRepository.findByNaam(tafelNaam);

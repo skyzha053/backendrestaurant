@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface BesteldItemRepository extends JpaRepository<BesteldItem, Long> {
 
     Optional<BesteldItem> findByTafelAndItemNaam(Tafel tafel, String itemNaam);
-
+    List<BesteldItem> findByTafel_Id(Long tafelId);
     List<BesteldItem> findByTafel(Tafel tafel);
 }
