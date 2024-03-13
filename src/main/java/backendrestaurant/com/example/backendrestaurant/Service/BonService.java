@@ -1,7 +1,7 @@
 package backendrestaurant.com.example.backendrestaurant.Service;
 
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Bon;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.BesteldItem;
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Bon;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Tafel;
 import backendrestaurant.com.example.backendrestaurant.Repository.BesteldItemRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.BonRepository;
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import java.util.ArrayList;
 @Service
 public class BonService {
 
@@ -28,6 +28,24 @@ public class BonService {
     @Autowired
     private BonRepository bonRepository;
 
+    @Transactional
+    public String getAllBonnen() {
+        List<Tafel> tafels = tafelRepository.findAll();
+        List<String> bonnen = new ArrayList<>();
+
+        for (Tafel tafel : tafels) {
+            Long tafelId = tafel.getId();
+            String bonText = generateBon(tafelId);
+
+            // Voeg informatie toe over betaald status
+            bonText += "\nIs Paid: " + isPaid(tafelId);
+
+            bonnen.add(bonText);
+        }
+
+        // Voeg witregels toe tussen de bonnen en converteer naar één enkele String
+        return bonnen.stream().collect(Collectors.joining("\n\n", "", ""));
+    }
 
     @Transactional
     public void saveBon(Long tafelId, boolean isPaid) {
@@ -76,7 +94,6 @@ public class BonService {
             }
         }
     }
-
 
     // Method to calculate the total price of items for a table
     private BigDecimal calculateTotalPrijs(Long tafelId) {
