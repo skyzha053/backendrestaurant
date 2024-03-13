@@ -110,6 +110,23 @@ public class MenuItemController {
         }
     }
 
+    @PutMapping("/{id}/unblock")
+    public ResponseEntity<String> unblockMenuItem(@PathVariable Long id) {
+        String result = menuItemService.unblockMenuItem(id);
+
+        if (result != null) {
+            if (result.equals("Menu item is now available.")) {
+                return ResponseEntity.ok().body(result);
+            } else if (result.equals("Menu item is already available.")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+            }
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred.");
+        }
+    }
+
     @GetMapping("/checkAllergies")
     public ResponseEntity<Map<String, Boolean>> checkAllergiesInMenu(@RequestBody Map<String, Object> requestBody) {
         Object menuItemIdObject = requestBody.get("menuItemId");

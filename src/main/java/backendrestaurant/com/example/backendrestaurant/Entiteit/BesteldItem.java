@@ -22,9 +22,6 @@ public class BesteldItem {
     @JoinColumn(name = "menu_item_id")
     private MenuItem menuItem;
 
-    @ManyToOne
-    @JoinColumn(name = "factuur_id")
-    private Factuur factuur;
 
 
     @ManyToOne
@@ -95,9 +92,6 @@ public class BesteldItem {
         return this.prijs;
     }
 
-    public void setFactuur(Factuur factuur) {
-        this.factuur = factuur;
-    }
     public void setBon(Bon bon) { this.bon = bon;}
 
 

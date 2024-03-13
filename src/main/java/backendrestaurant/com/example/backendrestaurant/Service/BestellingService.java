@@ -7,17 +7,14 @@ import org.springframework.http.HttpStatus;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.BestellingRequest;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.BesteldItem;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank;
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Factuur;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Tafel;
 import backendrestaurant.com.example.backendrestaurant.Repository.BesteldItemRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.DrankRepository;
-import backendrestaurant.com.example.backendrestaurant.Repository.FactuurRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.MenuItemRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.TafelRepository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +33,6 @@ public class BestellingService {
     @Autowired
     private BesteldItemRepository besteldItemRepository;
 
-    @Autowired
-    private FactuurRepository factuurRepository;
 
 
     public void processMenuItems(List<BesteldItem> besteldeMenuItems, Tafel tafel) {
@@ -114,34 +109,14 @@ public class BestellingService {
         List<BesteldItem> besteldeItems = besteldItemRepository.findByTafel(tafel);
         BigDecimal totalePrijs = BigDecimal.ZERO;
 
-        // Create a new Factuur instance
-        Factuur factuur = new Factuur();
-        factuur.setTafel(tafel);
-
-        // Calculate totale prijs and associate items with the factuur
+        // Calculate totale prijs
         for (BesteldItem besteldItem : besteldeItems) {
             totalePrijs = totalePrijs.add(besteldItem.getPrijs());
-            besteldItem.setFactuur(factuur);
-            factuur.getBesteldeItems().add(besteldItem);
         }
 
-        // Set the totale prijs for the factuur en tafel
-        factuur.setTotalePrijs(totalePrijs);
+        // Set the totale prijs for the tafel
         tafel.setTotalePrijs(totalePrijs);
-
-        // Save the factuur (and cascade to besteldeItems) and update tafel
-        factuurRepository.save(factuur);
         tafelRepository.save(tafel);
-
-        // Note: Since besteldItemRepository.findByTafel(tafel) returns a new list, we need to fetch
-        // the updated list after saving the factuur and tafel.
-        besteldeItems = besteldItemRepository.findByTafel(tafel);
-
-        // Update the factuur reference for each BesteldItem
-        for (BesteldItem besteldItem : besteldeItems) {
-            besteldItem.setFactuur(factuur);
-            besteldItemRepository.save(besteldItem);
-        }
     }
 
     public Tafel updateTafel(String tafelNaam, String nieuweNaam) {
@@ -201,6 +176,7 @@ public class BestellingService {
             return new ResponseEntity<>("Tafel niet gevonden", HttpStatus.NOT_FOUND);
         }
     }
+
 
 
 }
