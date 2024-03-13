@@ -1,14 +1,10 @@
 package backendrestaurant.com.example.backendrestaurant.Controller;
 
 import backendrestaurant.com.example.backendrestaurant.Service.BonService;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/bon")
@@ -16,6 +12,13 @@ public class BonController {
 
     @Autowired
     private BonService bonService;
+
+    @GetMapping
+    public ResponseEntity<String> getAllBonnen() {
+        String bonnen = bonService.getAllBonnen();
+        return new ResponseEntity<>(bonnen, HttpStatus.OK);
+    }
+
 
     @GetMapping("/{tafelId}")
     public ResponseEntity<String> generateBon(@PathVariable Long tafelId) {
@@ -34,7 +37,6 @@ public class BonController {
 
         return new ResponseEntity<>(bonText, HttpStatus.OK);
     }
-
 
     @PutMapping("/{tafelId}/betaald")
     public ResponseEntity<String> markAsPaid(@PathVariable Long tafelId) {
