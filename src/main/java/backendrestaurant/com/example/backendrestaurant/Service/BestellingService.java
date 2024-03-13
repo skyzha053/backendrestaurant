@@ -1,14 +1,10 @@
 package backendrestaurant.com.example.backendrestaurant.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;  // Import BigDecimal
-import java.util.List;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.http.HttpStatus;
-
+import backendrestaurant.com.example.backendrestaurant.Entiteit.BestellingRequest;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.BesteldItem;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
@@ -18,6 +14,10 @@ import backendrestaurant.com.example.backendrestaurant.Repository.DrankRepositor
 import backendrestaurant.com.example.backendrestaurant.Repository.MenuItemRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.TafelRepository;
 
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class BestellingService {
 
@@ -25,13 +25,37 @@ public class BestellingService {
     private TafelRepository tafelRepository;
 
     @Autowired
-    private MenuItemRepository menuItemRepository;
-
-    @Autowired
     private DrankRepository drankRepository;
 
     @Autowired
+    private MenuItemRepository menuItemRepository;
+
+    @Autowired
     private BesteldItemRepository besteldItemRepository;
+
+
+
+    public void processMenuItems(List<BesteldItem> besteldeMenuItems, Tafel tafel) {
+        processItems(besteldeMenuItems, tafel, false);
+    }
+
+    public void processDranken(List<BesteldItem> besteldeDranken, Tafel tafel) {
+        processItems(besteldeDranken, tafel, true);
+    }
+    public ResponseEntity<String> plaatsBestelling(BestellingRequest bestellingRequest) {
+        String tafelNaam = bestellingRequest.getTafelNaam();
+        List<BesteldItem> besteldeMenuItems = bestellingRequest.getBesteldeMenuItems();
+        List<BesteldItem> besteldeDranken = bestellingRequest.getBesteldeDranken();
+
+        Tafel tafel = createOrUpdateTafel(tafelNaam);
+
+        // Verwerk zowel menu-items als dranken
+        processMenuItems(besteldeMenuItems, tafel);
+        processDranken(besteldeDranken, tafel);
+
+        return new ResponseEntity<>("Bestelling geplaatst voor tafel " + tafelNaam, HttpStatus.OK);
+    }
+
 
     public Tafel createOrUpdateTafel(String tafelNaam) {
         Optional<Tafel> optionalTafel = tafelRepository.findByNaam(tafelNaam);
@@ -46,70 +70,53 @@ public class BestellingService {
         return tafel;
     }
 
-    public void processMenuItems(List<BesteldItem> besteldeMenuItems, Tafel tafel) {
-        for (BesteldItem besteldItem : besteldeMenuItems) {
-            Optional<MenuItem> optionalMenuItem = menuItemRepository.findByName(besteldItem.getItemNaam());
-            if (optionalMenuItem.isPresent()) {
-                MenuItem menuItem = optionalMenuItem.get();
-                // Create and save BesteldItem based on menuItem
-                BesteldItem besteldMenuItem = createBesteldItem(tafel, menuItem, besteldItem.getHoeveelheid());
-                besteldItemRepository.save(besteldMenuItem);
+    public void processItems(List<BesteldItem> besteldeItems, Tafel tafel, boolean isDrank) {
+        for (BesteldItem besteldItem : besteldeItems) {
+            Optional<? extends Object> optionalItem = isDrank ?
+                    drankRepository.findByNaam(besteldItem.getItemNaam()) :
+                    menuItemRepository.findByName(besteldItem.getItemNaam());
+
+            if (optionalItem.isPresent()) {
+                Object item = optionalItem.get();
+                BesteldItem besteldItemEntity = createBesteldItem(tafel, item, besteldItem.getHoeveelheid(), isDrank);
+                besteldItemRepository.save(besteldItemEntity);
             }
         }
         updateTotalePrijs(tafel);
     }
 
-    public void processDranken(List<BesteldItem> besteldeDranken, Tafel tafel) {
-        for (BesteldItem besteldItem : besteldeDranken) {
-            Optional<Drank> optionalDrank = drankRepository.findByNaam(besteldItem.getItemNaam());
-            if (optionalDrank.isPresent()) {
-                Drank drank = optionalDrank.get();
-                // Create and save BesteldItem based on drank
-                BesteldItem besteldDrank = createBesteldItem(tafel, drank, besteldItem.getHoeveelheid());
-                besteldItemRepository.save(besteldDrank);
-            }
+    private BesteldItem createBesteldItem(Tafel tafel, Object item, int hoeveelheid, boolean isDrank) {
+        BigDecimal prijs = isDrank ?
+                ((Drank) item).getPrijs().multiply(BigDecimal.valueOf(hoeveelheid)) :
+                ((MenuItem) item).getPrice().multiply(BigDecimal.valueOf(hoeveelheid));
+
+        BesteldItem besteldItem = new BesteldItem();
+        besteldItem.setTafel(tafel);
+        besteldItem.setHoeveelheid(hoeveelheid);
+        besteldItem.setPrijs(prijs);
+        besteldItem.setItemNaam(isDrank ? ((Drank) item).getNaam() : ((MenuItem) item).getName());
+
+        if (isDrank) {
+            besteldItem.setDrank((Drank) item);
+        } else {
+            besteldItem.setMenuItem((MenuItem) item);
         }
-        updateTotalePrijs(tafel);
+
+        return besteldItem;
     }
 
     private void updateTotalePrijs(Tafel tafel) {
         List<BesteldItem> besteldeItems = besteldItemRepository.findByTafel(tafel);
         BigDecimal totalePrijs = BigDecimal.ZERO;
 
+        // Calculate totale prijs
         for (BesteldItem besteldItem : besteldeItems) {
             totalePrijs = totalePrijs.add(besteldItem.getPrijs());
         }
 
+        // Set the totale prijs for the tafel
         tafel.setTotalePrijs(totalePrijs);
         tafelRepository.save(tafel);
-    }
-
-    private BesteldItem createBesteldItem(Tafel tafel, MenuItem menuItem, int hoeveelheid) {
-        // Implementeer de logica om de prijs in te stellen op basis van menuItem en hoeveelheid
-        BigDecimal prijs = menuItem.getPrice().multiply(BigDecimal.valueOf(hoeveelheid));
-
-        BesteldItem besteldItem = new BesteldItem();
-        besteldItem.setTafel(tafel);
-        besteldItem.setMenuItem(menuItem);
-        besteldItem.setHoeveelheid(hoeveelheid);
-        besteldItem.setPrijs(prijs);
-        besteldItem.setItemNaam(menuItem.getName());
-
-        return besteldItem;
-    }
-
-    private BesteldItem createBesteldItem(Tafel tafel, Drank drank, int hoeveelheid) {
-
-        BigDecimal prijs = drank.getPrijs().multiply(BigDecimal.valueOf(hoeveelheid));
-
-        BesteldItem besteldItem = new BesteldItem();
-        besteldItem.setTafel(tafel);
-        besteldItem.setDrank(drank);
-        besteldItem.setHoeveelheid(hoeveelheid);
-        besteldItem.setPrijs(prijs);
-        besteldItem.setItemNaam(drank.getNaam());
-
-        return besteldItem;
     }
 
     public Tafel updateTafel(String tafelNaam, String nieuweNaam) {
@@ -169,6 +176,7 @@ public class BestellingService {
             return new ResponseEntity<>("Tafel niet gevonden", HttpStatus.NOT_FOUND);
         }
     }
+
 
 
 }
