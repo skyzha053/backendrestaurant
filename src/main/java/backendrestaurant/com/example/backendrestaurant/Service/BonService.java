@@ -13,8 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class BonService {
@@ -31,14 +31,24 @@ public class BonService {
 
     @Transactional
     public void saveBon(Long tafelId, boolean isPaid) {
-        // Create a new Bon instance
-        Bon bon = new Bon();
-        bon.setTafelId(tafelId);
-        bon.setPaid(isPaid);
+        // Check if a bon already exists for the given tafelId
+        Optional<Bon> existingBonOptional = bonRepository.findByTafelId(tafelId);
+        if (existingBonOptional.isPresent()) {
+            // A bon already exists, update its paid status instead of creating a new one
+            Bon existingBon = existingBonOptional.get();
+            existingBon.setPaid(isPaid);
+            bonRepository.save(existingBon);
+        } else {
+            // Create a new Bon instance
+            Bon bon = new Bon();
+            bon.setTafelId(tafelId);
+            bon.setPaid(isPaid);
 
-        // Save the bon in the database
-        bonRepository.save(bon);
+            // Save the bon in the database
+            bonRepository.save(bon);
+        }
     }
+
     @Transactional
     public void setPaidStatus(Long tafelId, boolean paid) {
         Tafel tafel = tafelRepository.findById(tafelId).orElse(null);
@@ -81,6 +91,7 @@ public class BonService {
         return tafel != null && tafel.isPaid();
     }
 
+    @Transactional
     public String generateBon(Long tafelId) {
         // Fetch bestelde items for the given tafel_id
         List<BesteldItem> besteldItems = besteldItemRepository.findByTafel_Id(tafelId);
@@ -94,6 +105,12 @@ public class BonService {
         Map<String, List<BesteldItem>> groupedItems = besteldItems.stream()
                 .collect(Collectors.groupingBy(BesteldItem::getItemNaam));
 
+        // Calculate total price
+        BigDecimal totalePrijs = BigDecimal.ZERO;
+        for (BesteldItem item : besteldItems) {
+            totalePrijs = totalePrijs.add(item.getPrijs());
+        }
+
         // Get the corresponding tafel
         Tafel tafel = tafelRepository.findById(tafelId).orElse(null);
 
@@ -101,9 +118,23 @@ public class BonService {
             return "Tafel niet gevonden met ID: " + tafelId;
         }
 
+        // Update total price in the bon
+        Optional<Bon> optionalBon = bonRepository.findByTafelId(tafelId);
+        if (optionalBon.isPresent()) {
+            Bon bon = optionalBon.get();
+            bon.setTotalPrijs(totalePrijs);
+            bonRepository.save(bon);
+        } else {
+            // Create a new Bon instance if bon does not exist
+            Bon bon = new Bon();
+            bon.setTafelId(tafelId);
+            bon.setTotalPrijs(totalePrijs);
+            bonRepository.save(bon);
+        }
+
         // Generate bon header
-        StringBuilder bon = new StringBuilder();
-        bon.append("Bon voor Tafel: ").append(tafel.getNaam()).append("\n\n");
+        StringBuilder bonBuilder = new StringBuilder();
+        bonBuilder.append("Bon voor Tafel: ").append(tafel.getNaam()).append("\n\n");
 
         // Generate bon items
         for (Map.Entry<String, List<BesteldItem>> entry : groupedItems.entrySet()) {
@@ -113,16 +144,15 @@ public class BonService {
             int totalHoeveelheid = items.stream().mapToInt(BesteldItem::getHoeveelheid).sum();
             BigDecimal totalPrice = items.stream().map(BesteldItem::getPrijs).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            bon.append("Item: ").append(itemNaam)
+            bonBuilder.append("Item: ").append(itemNaam)
                     .append(", Hoeveelheid: ").append(totalHoeveelheid)
                     .append(", Prijs: ").append(totalPrice)
                     .append("\n");
         }
 
         // Generate bon footer with totaal prijs
-        BigDecimal totaalPrijs = besteldItems.stream().map(BesteldItem::getPrijs).reduce(BigDecimal.ZERO, BigDecimal::add);
-        bon.append("\nTotaal Prijs: ").append(totaalPrijs);
+        bonBuilder.append("\nTotaal Prijs: ").append(totalePrijs);
 
-        return bon.toString();
+        return bonBuilder.toString();
     }
 }
