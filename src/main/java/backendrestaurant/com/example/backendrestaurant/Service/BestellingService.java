@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
+
+
 @Service
 public class BestellingService {
 
@@ -33,8 +35,6 @@ public class BestellingService {
     @Autowired
     private BesteldItemRepository besteldItemRepository;
 
-
-
     public void processMenuItems(List<BesteldItem> besteldeMenuItems, Tafel tafel) {
         processItems(besteldeMenuItems, tafel, false);
     }
@@ -42,6 +42,8 @@ public class BestellingService {
     public void processDranken(List<BesteldItem> besteldeDranken, Tafel tafel) {
         processItems(besteldeDranken, tafel, true);
     }
+
+
     public ResponseEntity<String> plaatsBestelling(BestellingRequest bestellingRequest) {
         String tafelNaam = bestellingRequest.getTafelNaam();
         List<BesteldItem> besteldeMenuItems = bestellingRequest.getBesteldeMenuItems();
@@ -49,12 +51,36 @@ public class BestellingService {
 
         Tafel tafel = createOrUpdateTafel(tafelNaam);
 
+        // Check if all menu items are available
+        if (!areMenuItemsAvailable(besteldeMenuItems)) {
+            return new ResponseEntity<>("Niet alle menu-items zijn momenteel beschikbaar. Bestelling kan niet worden geplaatst.", HttpStatus.BAD_REQUEST);
+        }
+
         // Verwerk zowel menu-items als dranken
         processMenuItems(besteldeMenuItems, tafel);
         processDranken(besteldeDranken, tafel);
 
         return new ResponseEntity<>("Bestelling geplaatst voor tafel " + tafelNaam, HttpStatus.OK);
     }
+
+
+    private boolean areMenuItemsAvailable(List<BesteldItem> besteldeMenuItems) {
+        for (BesteldItem item : besteldeMenuItems) {
+            Optional<MenuItem> optionalMenuItem = menuItemRepository.findByName(item.getItemNaam());
+            if (optionalMenuItem.isPresent()) {
+                MenuItem menuItem = optionalMenuItem.get();
+                if (!menuItem.isAvailable()) {
+                    return false;
+                }
+            } else {
+                return false; // Handle case where MenuItem is not found by name
+            }
+        }
+        return true;
+    }
+
+
+
 
 
     public Tafel createOrUpdateTafel(String tafelNaam) {
