@@ -68,15 +68,17 @@ public class ReservationController {
 
 
     @DeleteMapping("/deleteByName/{name}")
-    public ResponseEntity<Void> deleteReservationByName(@PathVariable String name) {
+    public ResponseEntity<String> deleteReservationByName(@PathVariable String name) {
         // Implement logic to delete a reservation by name
         boolean deleted = reservationService.deleteReservationByName(name);
 
         if (deleted) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>("Reservering verwijderd", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("Reservering niet gevonden", HttpStatus.NOT_FOUND);
         }
     }
+
+
 
 }
