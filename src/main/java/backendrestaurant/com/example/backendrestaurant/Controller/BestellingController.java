@@ -29,13 +29,13 @@ public class BestellingController {
     private BestellingService bestellingService; // Inject your service
 
 
-    @PostMapping("/plaatsen")
+    @PostMapping("/bestelling/plaatsen")
     public ResponseEntity<String> plaatsBestelling(@RequestBody BestellingRequest bestellingRequest) {
         return bestellingService.plaatsBestelling(bestellingRequest);
     }
 
 
-    @PostMapping("/tafel-verplaatsen")
+    @PostMapping("/bestelling/tafel-verplaatsen")
     public ResponseEntity<String> updateTafelNaam(@RequestBody TafelUpdateRequest tafelUpdateRequest) {
         Tafel tafel = bestellingService.updateTafel(
                 tafelUpdateRequest.getTafelNaam(),
@@ -49,7 +49,7 @@ public class BestellingController {
         }
     }
 
-    @PutMapping("/update-bestelling")
+    @PutMapping("/bestelling/update-bestelling")
     public ResponseEntity<String> updateBestelling(@RequestBody Map<String, Object> payload) {
         String tafelNaam = (String) payload.get("tafelNaam");
         String itemName = (String) payload.get("itemName");
