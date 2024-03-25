@@ -24,7 +24,7 @@ public class DrankController {
         return drankService.getDrankById(id);
     }
 
-    @PostMapping
+    @PostMapping("/plaatsen")
     public Drank createDrank(@RequestBody Drank drank) {
         return drankService.createDrank(drank);
     }
