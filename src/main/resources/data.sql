@@ -42,24 +42,6 @@ INSERT INTO public.reservation (id, allergies, bedrijfsnaam, comments, email_add
 VALUES
     (1, 'geen', NULL, 'Graag bij het raam', 'r.terweele@live.nl', 'Remon ter Weele', 9, '0638998771', '2024-05-05');
 
-INSERT INTO public.tafel (paid, totale_prijs, id, naam)
-VALUES
-    ('f', 28.50, 1, 'Ayla');
-
-INSERT INTO public.besteld_item (hoeveelheid, prijs, bon_id, drank_id, id, menu_item_id, tafel_id, item_naam)
-VALUES
-    (3, 21.00, NULL, NULL, 1, 1, 1, 'Mediterraans Landbrood'),
-    (1, 2.50, NULL, 1, 2, NULL, 1, 'Cola'),
-    (2, 5.00, NULL, 2, 3, NULL, 1, 'Fanta');
-
-
--- Voeg gegevens toe aan de tabel 'omzet'
-INSERT INTO public.omzet (id, datum, omzet_bedrag)
-VALUES
-    (1, '2024-03-13 18:57:09.054744', 867),
-    (2, '2024-03-13 18:59:12.589553', 964);
-
-
 
 INSERT INTO public.roles (active, id, description, role_name)
 VALUES
