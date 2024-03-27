@@ -26,6 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http, JwtRequestFilter jwtRequestFilter) throws Exception {
         http
                 .httpBasic(hp -> hp.disable())
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/v3/api-docs/**",
@@ -38,6 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/").authenticated()
                         .requestMatchers("/bon/").authenticated()
                         .requestMatchers("/allergie/").authenticated()
+                        .requestMatchers("/newsletter/").authenticated()
                         .requestMatchers("/bestelling/").authenticated()
                         .requestMatchers("/menuItems/all/{id}").authenticated()
                         .requestMatchers("/menuItems/all/{id}").authenticated()
@@ -53,6 +55,8 @@ public class SecurityConfig {
                         .requestMatchers("/drinks/dranken/plaatsen").hasRole("BAAS")
                         .requestMatchers("/drinks/dranken/").hasAnyRole("SERVEERSTERS", "RESTAURANTMANAGER")
                         .requestMatchers("/user/**").hasRole("BAAS")
+                        .requestMatchers("/newsletter/upload").hasRole("BAAS")
+                        .requestMatchers("/newsletter/download/latest").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTER", "CHEFKOK")
                         .requestMatchers("/bon/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTER")
                         .requestMatchers("/allergie/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTER")
                         .requestMatchers("/bestelling/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTER")
