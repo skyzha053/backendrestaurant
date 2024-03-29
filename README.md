@@ -1,28 +1,29 @@
-Installatiehandleiding voor Spring Boot-applicatie
-1. Inleiding
+# Installatiehandleiding voor Spring Boot-applicatie
+
+## 1. Inleiding
 
 Deze handleiding biedt stapsgewijze instructies voor het installeren en configureren van een Spring Boot-applicatie.
 
-2. Benodigdheden
+## 2. Benodigdheden
 
     JDK (Java Development Kit)
     Maven 3.2.4
     Teksteditor (bijv. IntelliJ IDEA, Eclipse, Visual Studio Code)
     Een database naar keuze (bijvoorbeeld MySQL, PostgreSQL, H2)
     Postman, Insomnia (optioneel, voor het testen van REST-endpoints)
+    
+## 3. Installatie instructies (in de vorm van een stappenplan)
 
-3. Installatie instructies (in de vorm van een stappenplan)
-
-    Projectstructuur opzetten:
+### Projectstructuur opzetten:
         Maak een nieuwe map voor je project.
         Creëer de voorgestelde mappenstructuur zoals beschreven in de handleiding.
 
-    Maven POM-bestand aanmaken:
+### Maven POM-bestand aanmaken:
         Maak een pom.xml-bestand aan in de hoofdmap van je project.
         Voeg de benodigde Maven-configuratie toe, inclusief de vereiste afhankelijkheden voor je Spring Boot-applicatie.
         Zorg ervoor dat Maven 3.2.4 wordt gespecificeerd als de versie.
 
-    Database-configuratie in application.properties aanpassen:
+ ### Database-configuratie in application.properties aanpassen:
         Open het application.properties-bestand onder src/main/resources/.
         Pas de databaseconfiguratie aan volgens de specificaties van je gekozen database. Bijvoorbeeld:
 
@@ -31,22 +32,22 @@ Deze handleiding biedt stapsgewijze instructies voor het installeren en configur
         spring.datasource.password=wachtwoord
         spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 
-    Implementeer de Spring Boot-applicatie:
+   ### Implementeer de Spring Boot-applicatie:
         Schrijf de hoofdklasse Application.java om de Spring Boot-applicatie te starten.
         Implementeer de benodigde functionaliteit van de applicatie.
 
-    Voeg tests toe (optioneel):
+### Voeg tests toe (optioneel):
         Implementeer testklassen onder src/test/java/ om de functionaliteit van de applicatie te testen.
 
     Project importeren in je IDE:
         Open je favoriete IDE.
         Importeer het project door de hoofdmap te selecteren.
 
-    Bouw en voer de applicatie uit:
+### Bouw en voer de applicatie uit:
         Bouw de applicatie met Maven (mvn clean package).
         Voer de Spring Boot-applicatie uit (java -jar target/<project-naam>-<versie>.jar).
 
-4. Testgebruikers
+##4. Testgebruikers
 
 | Gebruikersnaam | Wachtwoord  | Rol                |
 |----------------|-------------|--------------------|
@@ -55,11 +56,11 @@ Deze handleiding biedt stapsgewijze instructies voor het installeren en configur
 | Emma           | Novi123     | serveerster        |
 | Chikit         | Novi123     | Chefkok            |
 
-5. Postman collecties
+##5. Postman collecties
    
 [Backend.postman_collection.json](https://github.com/skyzha053/backendrestaurant/files/14804743/Backend.postman_collection.json)
 
-6. REST-endpoints
+## 6. REST-endpoints
     Swagger UI:
         URL: /swagger-ui.html
         Beschrijving: Swagger UI voor het bekijken en testen van de API-documentatie en -functionaliteit.
@@ -204,7 +205,7 @@ Deze handleiding biedt stapsgewijze instructies voor het installeren en configur
         Methode: POST
         Beschrijving: Uploadt een nieuwsbrief.
 
-7. Overige commando’s
+## 7. Overige commando’s
    
 1. **Maven clean:**
    - Commando: `mvn clean`
@@ -229,10 +230,6 @@ Deze handleiding biedt stapsgewijze instructies voor het installeren en configur
 6. **Starten van de Spring Boot-applicatie:**
    - Commando: `java -jar target/<project-naam>-<versie>.jar`
    - Beschrijving: Start de Spring Boot-applicatie met het gegenereerde JAR-bestand.
-
-7. **Spring Boot Actuator endpoints:**
-   - URL: `/actuator`
-   - Beschrijving: Biedt verschillende endpoints voor het controleren en beheren van de Spring Boot-applicatie, zoals gezondheidscontrole, informatie over de omgeving en metrieken.
 
 Deze commando's kunnen worden gebruikt tijdens het ontwikkelen, debuggen en beheren van de Spring Boot-applicatie om verschillende taken uit te voeren, zoals het bouwen, testen, starten en beheren van de applicatie.
 
