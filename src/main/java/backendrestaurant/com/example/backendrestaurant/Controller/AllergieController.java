@@ -29,9 +29,5 @@ public class AllergieController {
         return allergieService.createAllergie(allergie);
     }
 
-    @PutMapping("/{id}")
-    public Allergie updateAllergie(@PathVariable Long id, @RequestBody Allergie updatedAllergie) {
-        return allergieService.updateAllergie(id, updatedAllergie);
-    }
 
 }
