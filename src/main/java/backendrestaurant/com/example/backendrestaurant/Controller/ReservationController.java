@@ -26,24 +26,22 @@ public class ReservationController {
     }
     @PostMapping
     public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-        // Set the current date if the reservation date is not provided in the request
+
         if (reservation.getReservationDate() == null) {
             reservation.setReservationDate(LocalDate.now());
         }
 
-        // Set the default email only if it is not provided in the request
+
         if (reservation.getEmailAddress() == null || reservation.getEmailAddress().isEmpty()) {
-            // Set the default email (replace with your logic)
+
             reservation.setEmailAddress("default@example.com");
         }
 
-        // Set the default phone number only if it is not provided in the request
         if (reservation.getPhoneNumber() == null || reservation.getPhoneNumber().isEmpty()) {
-            // Set the default phone number (replace with your logic)
+
             reservation.setPhoneNumber("123456789");
         }
 
-        // Implement logic to create a new reservation
         Reservation createdReservation = reservationService.createReservation(reservation);
 
         return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);

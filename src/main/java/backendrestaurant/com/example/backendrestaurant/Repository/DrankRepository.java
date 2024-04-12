@@ -2,7 +2,7 @@ package backendrestaurant.com.example.backendrestaurant.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank; // Correct import
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank;
 
 import java.util.Optional;
 

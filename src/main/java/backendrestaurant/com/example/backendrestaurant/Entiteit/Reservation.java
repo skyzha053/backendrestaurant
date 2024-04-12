@@ -20,11 +20,11 @@ public class Reservation {
     private String phoneNumber;
     private String emailAddress;
 
-    private String bedrijfsnaam; // New field for company name
+    private String bedrijfsnaam;
 
     // Constructors
     public Reservation() {
-        // default constructor
+
     }
 
     public Reservation(String name, int numberOfPersons, LocalDate reservationDate, String allergies, String comments, String phoneNumber, String emailAddress, String bedrijfsnaam) {
@@ -38,7 +38,7 @@ public class Reservation {
         this.bedrijfsnaam = bedrijfsnaam;
     }
 
-    // Getters and setters
+
     public Long getId() {
         return id;
     }

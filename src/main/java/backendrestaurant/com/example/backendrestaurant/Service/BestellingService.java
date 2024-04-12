@@ -51,12 +51,12 @@ public class BestellingService {
 
         Tafel tafel = createOrUpdateTafel(tafelNaam);
 
-        // Check if all menu items are available
+
         if (!areMenuItemsAvailable(besteldeMenuItems)) {
             return new ResponseEntity<>("Niet alle menu-items zijn momenteel beschikbaar. Bestelling kan niet worden geplaatst.", HttpStatus.BAD_REQUEST);
         }
 
-        // Verwerk zowel menu-items als dranken
+
         processMenuItems(besteldeMenuItems, tafel);
         processDranken(besteldeDranken, tafel);
 
@@ -73,7 +73,7 @@ public class BestellingService {
                     return false;
                 }
             } else {
-                return false; // Handle case where MenuItem is not found by name
+                return false;
             }
         }
         return true;

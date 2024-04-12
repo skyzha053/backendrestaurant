@@ -34,13 +34,13 @@ public class MenuItemService {
             allergieRepository.save(allergie);
         }
 
-        // Nu backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem opslaan
-        MenuItem savedMenuItem = menuItemRepository.save(menuItem); // Zorg ervoor dat menuItem nu een ID heeft
 
-        // Zet het toegewezen ID terug in het oorspronkelijke object
+        MenuItem savedMenuItem = menuItemRepository.save(menuItem);
+
+
         menuItem.setId(savedMenuItem.getId());
 
-        // Update het menu-item in de database met het toegewezen ID
+
         return menuItemRepository.save(menuItem);
     }
 
@@ -65,21 +65,21 @@ public class MenuItemService {
             MenuItem menuItem = menuItemRepository.findById(id).orElse(null);
 
             if (menuItem != null) {
-                // Allergieën van het bestaande menu-item verwijderen
+
                 for (Allergie allergie : menuItem.getAllergenen()) {
                     allergie.getMenuItems().remove(menuItem);
                 }
 
-                // Allergieën van het bijgewerkte menu-item toevoegen
+
                 for (Allergie allergie : updatedMenuItem.getAllergenen()) {
                     allergie.getMenuItems().add(updatedMenuItem);
                     allergieRepository.save(allergie);
                 }
 
-                // Overige bijwerkingen uitvoeren
+
                 updatedMenuItem.setId(id);
 
-                // Update het menu-item in de database
+
                 return menuItemRepository.save(updatedMenuItem);
             }
         }

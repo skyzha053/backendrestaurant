@@ -13,10 +13,10 @@ public class Newsletter {
 
     private String title;
     private String content;
-    private String fileName; // Nieuw veld voor het bestandsnaam
-    private byte[] data; // Nieuw veld voor de gegevens van het bestand
+    private String fileName;
+    private byte[] data;
 
-    // Constructors, getters, and setters
+
     public Newsletter() {}
 
     public Newsletter(String title, String content) {
@@ -24,7 +24,7 @@ public class Newsletter {
         this.content = content;
     }
 
-    // Getters and setters
+
     public Long getId() {
         return id;
     }
@@ -49,7 +49,7 @@ public class Newsletter {
         this.content = content;
     }
 
-    // Nieuwe getters en setters voor bestandsnaam en gegevens
+
     public String getFileName() {
         return fileName;
     }

@@ -17,7 +17,7 @@ public class Drank {
     private String type;
     private BigDecimal prijs;
 
-    // Constructors, getters, setters, en andere benodigde methoden
+
 
     public Long getId() {
         return id;

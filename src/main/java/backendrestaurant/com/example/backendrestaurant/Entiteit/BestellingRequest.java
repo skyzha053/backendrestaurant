@@ -7,7 +7,7 @@ public class BestellingRequest {
     private List<BesteldItem> besteldeMenuItems;
     private List<BesteldItem> besteldeDranken;
 
-    // Constructors, getters, and setters
+
 
     public BestellingRequest() {
     }

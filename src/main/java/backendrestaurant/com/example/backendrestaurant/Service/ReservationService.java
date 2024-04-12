@@ -30,18 +30,18 @@ public class ReservationService {
 
         if (existingReservation.isPresent()) {
             Reservation reservation = existingReservation.get();
-            // Update fields as needed
+
             reservation.setNumberOfPersons(updatedReservation.getNumberOfPersons());
             reservation.setReservationDate(updatedReservation.getReservationDate());
             reservation.setAllergies(updatedReservation.getAllergies());
             reservation.setComments(updatedReservation.getComments());
 
-            // Update bedrijfsnaam
+
             reservation.setBedrijfsnaam(updatedReservation.getBedrijfsnaam());
 
             return reservationRepository.save(reservation);
         } else {
-            return null; // Handle not found scenario
+            return null;
         }
     }
 
@@ -50,7 +50,7 @@ public class ReservationService {
             reservationRepository.deleteById(id);
             return true;
         } else {
-            return false; // Handle not found scenario
+            return false;
         }
     }
 

@@ -37,7 +37,7 @@ public class BesteldItem {
     @Column(name = "item_naam")
     private String itemNaam;
 
-    // Constructors, getters, setters
+
 
     public boolean isDrank() {
         return this.drank != null;
@@ -52,12 +52,12 @@ public class BesteldItem {
     }
 
     public Drank getDrank() {
-        // Implement the logic to return the Drank entity associated with this BesteldItem
+
         return drank;
     }
 
     public MenuItem getMenuItem() {
-        // Implement the logic to return the MenuItem entity associated with this BesteldItem
+
         return menuItem;
     }
     public String getItemNaam() {

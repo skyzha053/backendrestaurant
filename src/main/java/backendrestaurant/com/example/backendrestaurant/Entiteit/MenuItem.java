@@ -21,7 +21,7 @@ public class MenuItem {
     @ManyToMany(cascade = CascadeType.PERSIST)
     private Set<Allergie> allergenen = new HashSet<>();
 
-    // Constructors, getters, setters, and other necessary methods
+
 
     public Long getId() {
         return id;
@@ -71,7 +71,7 @@ public class MenuItem {
         this.allergenen = allergenen;
     }
 
-    // Additional methods added
+
     public void addAllergie(Allergie allergie) {
         if (allergie != null) {
             allergenen.add(allergie);

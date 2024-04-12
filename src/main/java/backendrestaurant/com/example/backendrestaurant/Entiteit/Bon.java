@@ -12,11 +12,11 @@ public class Bon {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long tafelId; // Deze eigenschap heet nu 'tafelId' in plaats van 'tafel'
+    private Long tafelId;
     private boolean paid;
     private BigDecimal totalPrijs;
 
-    // Constructors, getters en setters
+
     public Bon() {
     }
 

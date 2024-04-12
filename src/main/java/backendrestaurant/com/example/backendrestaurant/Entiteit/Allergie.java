@@ -18,7 +18,7 @@ public class Allergie {
     @ManyToMany(mappedBy = "allergenen")
     private Set<MenuItem> menuItems = new HashSet<>();
 
-    // Constructors, getters, setters, and other necessary methods
+
 
     public Long getId() {
         return id;
@@ -44,7 +44,7 @@ public class Allergie {
         this.menuItems = menuItems;
     }
 
-    // Additional methods added
+
     public void addMenuItem(MenuItem menuItem) {
         if (menuItem != null) {
             menuItems.add(menuItem);
