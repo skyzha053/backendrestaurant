@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 @RestController
-@RequestMapping("/reservering/reservations")
+@RequestMapping("/reservations")
 public class ReservationController {
     @Autowired
     private ReservationService reservationService;
