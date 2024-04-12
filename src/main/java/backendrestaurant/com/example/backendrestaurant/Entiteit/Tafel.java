@@ -7,9 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import java.math.BigDecimal;  // Add this import statement
+import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
@@ -26,10 +24,10 @@ public class Tafel {
     @OneToMany(mappedBy = "tafel", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<BesteldItem> besteldeItems;
 
-    // Constructors, getters, and setters...
+
 
     public Tafel() {
-        // Empty constructor required by JPA
+
     }
 
     public Tafel(String naam) {
@@ -77,5 +75,5 @@ public class Tafel {
     public void setPaid(boolean paid) {
         this.paid = paid;
     }
-    // Other getters and setters as needed...
+
 }

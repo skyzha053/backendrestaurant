@@ -22,8 +22,7 @@ public class NewsletterController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadNewsletter(@RequestParam("nieuwsbrief") MultipartFile file) {
-        // Verwerk het ontvangen bestand hier
-        // Creëer een nieuwe nieuwsbrief met bestandsgegevens en sla deze op
+
         try {
             Newsletter newsletter = new Newsletter();
             newsletter.setFileName(file.getOriginalFilename());

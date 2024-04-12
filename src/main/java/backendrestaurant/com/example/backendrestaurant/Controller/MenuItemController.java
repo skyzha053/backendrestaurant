@@ -13,10 +13,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.HashMap;
 
-import java.util.Arrays;
-
-import java.util.stream.Collectors;
-
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
 import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
@@ -58,18 +54,18 @@ public class MenuItemController {
     public ResponseEntity<MenuItem> createMenuItem(@RequestBody MenuItem menuItem) {
         menuItem.setId(null);
 
-        // Iterate through the received allergens and check if they exist in the database
+
         Set<Allergie> existingAllergens = new HashSet<>();
         for (Allergie allergie : menuItem.getAllergenen()) {
             Allergie existingAllergie = allergieService.getByName(allergie.getNaam());
 
-            // Only add the allergen if it already exists in the database
+
             if (existingAllergie != null) {
                 existingAllergens.add(existingAllergie);
             }
         }
 
-        // Set the existing allergens to the menu item
+
         menuItem.setAllergenen(existingAllergens);
 
         MenuItem createdMenuItem = menuItemService.createMenuItem(menuItem);
@@ -163,12 +159,11 @@ public class MenuItemController {
         }
     }
 
-    // DTO class for checkAllergies endpoint
+
     public static class CheckAllergiesRequest {
         private Long menuItemId;
         private List<String> allergenen;
 
-        // Getters and setters
 
         public Long getMenuItemId() {
             return menuItemId;

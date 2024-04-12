@@ -11,7 +11,7 @@ import backendrestaurant.com.example.backendrestaurant.Entiteit.Tafel;
 import backendrestaurant.com.example.backendrestaurant.Repository.DrankRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.MenuItemRepository;
 import backendrestaurant.com.example.backendrestaurant.Repository.TafelRepository;
-import backendrestaurant.com.example.backendrestaurant.Service.BestellingService; // Import your service
+import backendrestaurant.com.example.backendrestaurant.Service.BestellingService;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.TafelUpdateRequest;
 @RestController
 public class BestellingController {

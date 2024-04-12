@@ -37,12 +37,12 @@ public class AllergieService {
     public Allergie getByName(String name) {
         List<Allergie> allergenList = allergieRepository.findByNaam(name);
 
-        // Check if the allergens are found
+
         if (!allergenList.isEmpty()) {
-            // Assuming you want to return the first found allergen
+
             return allergenList.get(0);
         }
 
-        return null; // Return null if no allergen is found
+        return null;
     }
 }

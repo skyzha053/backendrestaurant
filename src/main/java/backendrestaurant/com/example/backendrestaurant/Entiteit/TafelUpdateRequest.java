@@ -5,9 +5,9 @@ public class TafelUpdateRequest {
     private String tafelNaam;
     private String nieuweNaam;
 
-    // Constructors (you can generate these using your IDE)
 
-    // getters en setters
+
+
     public String getTafelNaam() {
         return tafelNaam;
     }
