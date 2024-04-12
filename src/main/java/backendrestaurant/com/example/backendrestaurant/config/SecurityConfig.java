@@ -34,12 +34,12 @@ public class SecurityConfig {
                                 "/swagger-ui.html"
                         ).permitAll()
                         .requestMatchers("/login").permitAll()
-                        .requestMatchers("/reservering/").authenticated()
+                        .requestMatchers("/reservations/").authenticated()
                         .requestMatchers("/drinks/").authenticated()
                         .requestMatchers("/users").hasRole("BAAS")
                         .requestMatchers("/users/{id}").hasRole("BAAS")
                         .requestMatchers("/bon/").authenticated()
-                        .requestMatchers("/allergie/").authenticated()
+                        .requestMatchers("/allergieen/").authenticated()
                         .requestMatchers("/newsletter/").authenticated()
                         .requestMatchers("/bestelling/").authenticated()
                         .requestMatchers("/menuItems/all/{id}").authenticated()
@@ -53,9 +53,9 @@ public class SecurityConfig {
                         .requestMatchers("/newsletter/upload").hasRole("BAAS")
                         .requestMatchers("/newsletter/download/latest").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS", "CHEFKOK")
                         .requestMatchers("/bon/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
-                        .requestMatchers("/allergie/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
+                        .requestMatchers("/allergieen/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
                         .requestMatchers("/bestelling/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
-                        .requestMatchers("/reservering/**").hasAnyRole("BAAS", "RESTAURANTMANAGER")
+                        .requestMatchers("/reservations/**").hasAnyRole("BAAS", "RESTAURANTMANAGER")
                         .anyRequest().denyAll()
 
 
