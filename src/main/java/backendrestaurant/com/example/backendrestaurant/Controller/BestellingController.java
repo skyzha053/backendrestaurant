@@ -26,12 +26,14 @@ public class BestellingController {
     private DrankRepository drankRepository;
 
     @Autowired
-    private BestellingService bestellingService; // Inject your service
+    private BestellingService bestellingService;
 
 
     @PostMapping("/bestelling/plaatsen")
     public ResponseEntity<String> plaatsBestelling(@RequestBody BestellingRequest bestellingRequest) {
-        return bestellingService.plaatsBestelling(bestellingRequest);
+        ResponseEntity<String> response = bestellingService.plaatsBestelling(bestellingRequest);
+        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+
     }
 
 
@@ -55,7 +57,8 @@ public class BestellingController {
         String itemName = (String) payload.get("itemName");
         int hoeveelheid = (int) payload.get("hoeveelheid");
 
-        return bestellingService.updateBestelling(tafelNaam, itemName, hoeveelheid);
+        ResponseEntity<String> response = bestellingService.updateBestelling(tafelNaam, itemName, hoeveelheid);
+        return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
     }
 
 
