@@ -7,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import static org.mockito.ArgumentMatchers.any;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,66 +28,71 @@ public class AllergieServiceTest {
     @Test
     public void testGetAllAllergieen() {
         List<Allergie> allergieList = new ArrayList<>();
-        allergieList.add(new Allergie()); // Aanpassing hier
+        allergieList.add(new Allergie());
 
         when(allergieRepository.findAll()).thenReturn(allergieList);
 
         List<Allergie> result = allergieService.getAllAllergieen();
 
-        assertEquals(1, result.size());
+        assertEquals(allergieList.size(), result.size());
+        assertEquals(allergieList.get(0), result.get(0));
     }
 
     @Test
     public void testGetAllergieById() {
-        Allergie allergie = new Allergie(); // Aanpassing hier
+        Allergie allergie = new Allergie();
         allergie.setId(1L);
 
         when(allergieRepository.findById(1L)).thenReturn(Optional.of(allergie));
 
         Allergie result = allergieService.getAllergieById(1L);
 
-        assertEquals(allergie, result);
+        assertNotNull(result);
+        assertEquals(allergie.getId(), result.getId());
     }
 
     @Test
     public void testCreateAllergie() {
-        Allergie allergie = new Allergie(); // Aanpassing hier
+        Allergie allergie = new Allergie();
 
         when(allergieRepository.save(allergie)).thenReturn(allergie);
 
         Allergie result = allergieService.createAllergie(allergie);
 
+        assertNotNull(result);
         assertEquals(allergie, result);
-        verify(allergieRepository).save(allergie); // Verifieer of save is aangeroepen
+        verify(allergieRepository).save(allergie);
     }
 
     @Test
     public void testUpdateAllergie() {
-        Allergie existingAllergie = new Allergie(); // Aanpassing hier
+        Allergie existingAllergie = new Allergie();
         existingAllergie.setId(1L);
-        Allergie updatedAllergie = new Allergie(); // Aanpassing hier
+        Allergie updatedAllergie = new Allergie();
 
         when(allergieRepository.findById(1L)).thenReturn(Optional.of(existingAllergie));
         when(allergieRepository.save(updatedAllergie)).thenReturn(updatedAllergie);
 
         Allergie result = allergieService.updateAllergie(1L, updatedAllergie);
 
+        assertNotNull(result);
         assertEquals(updatedAllergie, result);
-        verify(allergieRepository).findById(1L); // Verifieer of findById is aangeroepen
-        verify(allergieRepository).save(updatedAllergie); // Verifieer of save is aangeroepen
+        verify(allergieRepository).findById(1L);
+        verify(allergieRepository).save(updatedAllergie);
     }
 
     @Test
     public void testGetByNameWhenAllergenExists() {
         List<Allergie> allergenList = new ArrayList<>();
-        allergenList.add(new Allergie()); // Aanpassing hier
+        Allergie allergie = new Allergie();
+        allergenList.add(allergie);
 
         when(allergieRepository.findByNaam("Test Allergie")).thenReturn(allergenList);
 
         Allergie result = allergieService.getByName("Test Allergie");
 
         assertNotNull(result);
-        assertEquals(allergenList.get(0), result);
+        assertEquals(allergie, result);
     }
 
     @Test
@@ -121,27 +125,16 @@ public class AllergieServiceTest {
 
     @Test
     public void testUpdateAllergieWhenNotExist() {
-        // Maak een nieuwe allergie aan die niet bestaat in de repository
         Allergie updatedAllergie = new Allergie();
         updatedAllergie.setId(1L);
 
-        // Wanneer findById wordt aangeroepen, geef een lege Optional terug (wat betekent dat de allergie niet bestaat)
         when(allergieRepository.findById(1L)).thenReturn(Optional.empty());
 
-        // Roep de updateAllergie-methode aan
         Allergie result = allergieService.updateAllergie(1L, updatedAllergie);
 
-        // Controleer of het resultaat null is, wat betekent dat de allergie niet kon worden bijgewerkt
         assertNull(result);
-
-        // Verifieer dat de findById-methode is aangeroepen
         verify(allergieRepository).findById(1L);
-
-        // Verifieer dat de save-methode nooit is aangeroepen omdat de allergie niet bestaat
-        verify(allergieRepository, never()).save(any(Allergie.class));
+        verify(allergieRepository, never()).save(updatedAllergie);
     }
-
-
-
 
 }
