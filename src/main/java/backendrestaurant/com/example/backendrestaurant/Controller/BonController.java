@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/bon")
+@RequestMapping("/bonnen")
 public class BonController {
 
     @Autowired
@@ -28,11 +28,10 @@ public class BonController {
             return new ResponseEntity<>(bonText, HttpStatus.NOT_FOUND);
         }
 
-        // Check if the order is paid for this specific table
         boolean isPaid = bonService.isPaid(tafelId);
         bonText += "\nIs Paid: " + isPaid;
 
-        // Save bon in the database
+
         bonService.saveBon(tafelId, isPaid);
 
         return new ResponseEntity<>(bonText, HttpStatus.OK);

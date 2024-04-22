@@ -39,7 +39,7 @@ public class SecurityConfig {
                         .requestMatchers("/users").hasRole("BAAS")
                         .requestMatchers("/users/{id}").hasRole("BAAS")
                         .requestMatchers("/bon/").authenticated()
-                        .requestMatchers("/allergieen/").authenticated()
+                        .requestMatchers("/allergies/").authenticated()
                         .requestMatchers("/newsletter/").authenticated()
                         .requestMatchers("/bestelling/").authenticated()
                         .requestMatchers("/menuItems/all/{id}").authenticated()
