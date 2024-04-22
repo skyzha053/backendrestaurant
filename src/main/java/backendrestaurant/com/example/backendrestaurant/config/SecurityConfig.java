@@ -53,7 +53,7 @@ public class SecurityConfig {
                         .requestMatchers("/newsletter/upload").hasRole("BAAS")
                         .requestMatchers("/newsletter/download/latest").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS", "CHEFKOK")
                         .requestMatchers("/bon/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
-                        .requestMatchers("/allergieen/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
+                        .requestMatchers("/allergies/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
                         .requestMatchers("/bestelling/**").hasAnyRole("BAAS", "RESTAURANTMANAGER", "SERVEERSTERS")
                         .requestMatchers("/reservations/**").hasAnyRole("BAAS", "RESTAURANTMANAGER")
                         .anyRequest().denyAll()

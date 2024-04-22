@@ -5,14 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Collections;
-import java.util.Optional;
-import java.util.HashMap;
+import java.util.*;
 
+import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemDTO;
+import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemResponseDTO;
+import backendrestaurant.com.example.backendrestaurant.dtos.CheckAllergiesRequestDTO;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
 import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
@@ -49,38 +46,32 @@ public class MenuItemController {
         }
     }
 
-
     @PostMapping("/create")
-    public ResponseEntity<MenuItem> createMenuItem(@RequestBody MenuItem menuItem) {
-        menuItem.setId(null);
-
-
+    public ResponseEntity<MenuItemResponseDTO> createMenuItem(@RequestBody MenuItemDTO menuItemDTO) {
+        MenuItem menuItem = mapMenuItemDTOToEntity(menuItemDTO);
         Set<Allergie> existingAllergens = new HashSet<>();
-        for (Allergie allergie : menuItem.getAllergenen()) {
-            Allergie existingAllergie = allergieService.getByName(allergie.getNaam());
-
-
+        for (String allergen : menuItemDTO.getAllergenen()) {
+            Allergie existingAllergie = allergieService.getByName(allergen);
             if (existingAllergie != null) {
                 existingAllergens.add(existingAllergie);
             }
         }
-
-
         menuItem.setAllergenen(existingAllergens);
-
         MenuItem createdMenuItem = menuItemService.createMenuItem(menuItem);
-
         if (createdMenuItem != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdMenuItem);
+            MenuItemResponseDTO responseDTO = mapMenuItemToResponseDTO(createdMenuItem);
+            return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MenuItem> updateMenuItem(@PathVariable Long id, @RequestBody MenuItem updatedMenuItem) {
+    public ResponseEntity<MenuItemResponseDTO> updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDTO updatedMenuItemDTO) {
+        MenuItem updatedMenuItem = mapMenuItemDTOToEntity(updatedMenuItemDTO);
         MenuItem menuItem = menuItemService.updateMenuItem(id, updatedMenuItem);
-        return ResponseEntity.ok().body(menuItem);
+        MenuItemResponseDTO responseDTO = mapMenuItemToResponseDTO(menuItem);
+        return ResponseEntity.ok().body(responseDTO);
     }
 
     @DeleteMapping("/{id}")
@@ -92,7 +83,6 @@ public class MenuItemController {
     @PutMapping("/{id}/block")
     public ResponseEntity<String> blockMenuItem(@PathVariable Long id) {
         String result = menuItemService.blockMenuItem(id);
-
         if (result != null) {
             if (result.equals("Menu item is now unavailable.")) {
                 return ResponseEntity.ok().body(result);
@@ -109,7 +99,6 @@ public class MenuItemController {
     @PutMapping("/{id}/unblock")
     public ResponseEntity<String> unblockMenuItem(@PathVariable Long id) {
         String result = menuItemService.unblockMenuItem(id);
-
         if (result != null) {
             if (result.equals("Menu item is now available.")) {
                 return ResponseEntity.ok().body(result);
@@ -124,61 +113,43 @@ public class MenuItemController {
     }
 
     @GetMapping("/checkAllergies")
-    public ResponseEntity<Map<String, Boolean>> checkAllergiesInMenu(@RequestBody Map<String, Object> requestBody) {
-        Object menuItemIdObject = requestBody.get("menuItemId");
-
-        if (menuItemIdObject == null) {
-            return ResponseEntity.badRequest().body(Collections.emptyMap());
-        }
-
-        try {
-            Long menuItemId = Long.parseLong(menuItemIdObject.toString());
-            List<String> allergenen = (List<String>) requestBody.get("allergenen");
-
-            Optional<MenuItem> optionalMenuItem = menuItemService.getMenuItemById(menuItemId);
-
-            if (optionalMenuItem.isPresent()) {
-                MenuItem menuItem = optionalMenuItem.get();
-                Set<Allergie> allergenenInMenuItem = menuItem.getAllergenen();
-
-                Map<String, Boolean> allergenPresenceMap = new HashMap<>();
-
-                for (String allergen : allergenen) {
-                    boolean isPresent = allergenenInMenuItem.stream()
-                            .anyMatch(a -> a.getNaam().equals(allergen));
-
-                    allergenPresenceMap.put(allergen, isPresent);
-                }
-
-                return ResponseEntity.ok(allergenPresenceMap);
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyMap());
+    public ResponseEntity<Map<String, Boolean>> checkAllergiesInMenu(@RequestBody CheckAllergiesRequestDTO requestDTO) {
+        Long menuItemId = requestDTO.getMenuItemId();
+        List<String> allergens = requestDTO.getAllergens();
+        Optional<MenuItem> optionalMenuItem = menuItemService.getMenuItemById(menuItemId);
+        if (optionalMenuItem.isPresent()) {
+            MenuItem menuItem = optionalMenuItem.get();
+            Set<Allergie> allergensInMenuItem = menuItem.getAllergenen();
+            Map<String, Boolean> allergenPresenceMap = new HashMap<>();
+            for (String allergen : allergens) {
+                boolean isPresent = allergensInMenuItem.stream()
+                        .anyMatch(a -> a.getNaam().equals(allergen));
+                allergenPresenceMap.put(allergen, isPresent);
             }
-        } catch (NumberFormatException | ClassCastException e) {
-            return ResponseEntity.badRequest().body(Collections.emptyMap());
+            return ResponseEntity.ok(allergenPresenceMap);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyMap());
         }
     }
 
+    // Hulpmethode om een MenuItemDTO naar een MenuItem entiteit te mappen
+    private MenuItem mapMenuItemDTOToEntity(MenuItemDTO menuItemDTO) {
+        MenuItem menuItem = new MenuItem();
+        menuItem.setName(menuItemDTO.getName());
+        menuItem.setDescription(menuItemDTO.getDescription());
+        menuItem.setPrice(menuItemDTO.getPrice());
+        menuItem.setAvailable(menuItemDTO.isAvailable());
+        return menuItem;
+    }
 
-    public static class CheckAllergiesRequest {
-        private Long menuItemId;
-        private List<String> allergenen;
-
-
-        public Long getMenuItemId() {
-            return menuItemId;
-        }
-
-        public void setMenuItemId(Long menuItemId) {
-            this.menuItemId = menuItemId;
-        }
-
-        public List<String> getAllergenen() {
-            return allergenen;
-        }
-
-        public void setAllergenen(List<String> allergenen) {
-            this.allergenen = allergenen;
-        }
+    // Hulpmethode om een MenuItem naar een MenuItemResponseDTO te mappen
+    private MenuItemResponseDTO mapMenuItemToResponseDTO(MenuItem menuItem) {
+        MenuItemResponseDTO responseDTO = new MenuItemResponseDTO();
+        responseDTO.setId(menuItem.getId());
+        responseDTO.setName(menuItem.getName());
+        responseDTO.setDescription(menuItem.getDescription());
+        responseDTO.setPrice(menuItem.getPrice().doubleValue());
+        responseDTO.setAvailable(menuItem.isAvailable());
+        return responseDTO;
     }
 }
