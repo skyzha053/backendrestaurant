@@ -1,22 +1,30 @@
 package backendrestaurant.com.example.backendrestaurant.Controller;
 
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Reservation;
 import backendrestaurant.com.example.backendrestaurant.Service.ReservationService;
+import backendrestaurant.com.example.backendrestaurant.dtos.CreateReservationDTO;
+import backendrestaurant.com.example.backendrestaurant.dtos.ReservationDTO;
+import backendrestaurant.com.example.backendrestaurant.dtos.UpdateReservationDTO;
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
+
 import java.util.List;
+import java.util.stream.Collectors;
+
 @RestController
 @RequestMapping("/reservations")
 public class ReservationController {
+
     @Autowired
     private ReservationService reservationService;
 
     @GetMapping
-    public ResponseEntity<List<Reservation>> getAllReservations() {
-        List<Reservation> reservations = reservationService.getAllReservations();
+    public ResponseEntity<List<ReservationDTO>> getAllReservations() {
+        List<ReservationDTO> reservations = reservationService.getAllReservations().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
 
         if (!reservations.isEmpty()) {
             return new ResponseEntity<>(reservations, HttpStatus.OK);
@@ -24,50 +32,29 @@ public class ReservationController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
     @PostMapping
-    public ResponseEntity<Reservation> createReservation(@RequestBody Reservation reservation) {
-
-        if (reservation.getReservationDate() == null) {
-            reservation.setReservationDate(LocalDate.now());
-        }
-
-
-        if (reservation.getEmailAddress() == null || reservation.getEmailAddress().isEmpty()) {
-
-            reservation.setEmailAddress("default@example.com");
-        }
-
-        if (reservation.getPhoneNumber() == null || reservation.getPhoneNumber().isEmpty()) {
-
-            reservation.setPhoneNumber("123456789");
-        }
-
-        Reservation createdReservation = reservationService.createReservation(reservation);
-
-        return new ResponseEntity<>(createdReservation, HttpStatus.CREATED);
+    public ResponseEntity<ReservationDTO> createReservation(@RequestBody CreateReservationDTO createReservationDTO) {
+        ReservationDTO reservationDTO = convertToDTO(reservationService.createReservation(convertToEntity(createReservationDTO)));
+        return new ResponseEntity<>(reservationDTO, HttpStatus.CREATED);
     }
 
-
-
-
     @PutMapping("/updateReservationByName/{name}")
-    public ResponseEntity<Reservation> updateReservationByName(
+    public ResponseEntity<ReservationDTO> updateReservationByName(
             @PathVariable String name,
-            @RequestBody Reservation updatedReservation
+            @RequestBody UpdateReservationDTO updateReservationDTO
     ) {
-        Reservation updated = reservationService.updateReservationByName(name, updatedReservation);
+        ReservationDTO updatedReservationDTO = convertToDTO(reservationService.updateReservationByName(name, convertToEntity(updateReservationDTO)));
 
-        if (updated != null) {
-            return new ResponseEntity<>(updated, HttpStatus.OK);
+        if (updatedReservationDTO != null) {
+            return new ResponseEntity<>(updatedReservationDTO, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
-
     @DeleteMapping("/deleteByName/{name}")
     public ResponseEntity<String> deleteReservationByName(@PathVariable String name) {
-        // Implement logic to delete a reservation by name
         boolean deleted = reservationService.deleteReservationByName(name);
 
         if (deleted) {
@@ -77,6 +64,33 @@ public class ReservationController {
         }
     }
 
+    // Helper method to convert entity to DTO
+    private ReservationDTO convertToDTO(Reservation reservation) {
+        ReservationDTO reservationDTO = new ReservationDTO();
+        reservationDTO.setId(reservation.getId());
+        reservationDTO.setName(reservation.getName());
+        reservationDTO.setReservationDate(reservation.getReservationDate());
+        reservationDTO.setEmailAddress(reservation.getEmailAddress());
+        reservationDTO.setPhoneNumber(reservation.getPhoneNumber());
+        return reservationDTO;
+    }
 
+    // Helper method to convert DTO to entity
+    private Reservation convertToEntity(CreateReservationDTO createReservationDTO) {
+        Reservation reservation = new Reservation();
+        reservation.setName(createReservationDTO.getName());
+        reservation.setReservationDate(createReservationDTO.getReservationDate());
+        reservation.setEmailAddress(createReservationDTO.getEmailAddress());
+        reservation.setPhoneNumber(createReservationDTO.getPhoneNumber());
+        return reservation;
+    }
 
+    // Helper method to convert DTO to entity
+    private Reservation convertToEntity(UpdateReservationDTO updateReservationDTO) {
+        Reservation reservation = new Reservation();
+        reservation.setReservationDate(updateReservationDTO.getReservationDate());
+        reservation.setEmailAddress(updateReservationDTO.getEmailAddress());
+        reservation.setPhoneNumber(updateReservationDTO.getPhoneNumber());
+        return reservation;
+    }
 }

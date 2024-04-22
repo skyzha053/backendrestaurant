@@ -2,6 +2,7 @@ package backendrestaurant.com.example.backendrestaurant.Controller;
 
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Newsletter;
 import backendrestaurant.com.example.backendrestaurant.Service.NewsletterService;
+import backendrestaurant.com.example.backendrestaurant.dtos.NewsletterDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -24,10 +25,10 @@ public class NewsletterController {
     public ResponseEntity<String> uploadNewsletter(@RequestParam("nieuwsbrief") MultipartFile file) {
 
         try {
-            Newsletter newsletter = new Newsletter();
-            newsletter.setFileName(file.getOriginalFilename());
-            newsletter.setData(file.getBytes());
-            newsletterService.uploadNewsletter(newsletter);
+            NewsletterDTO newsletterDTO = new NewsletterDTO();
+            newsletterDTO.setFileName(file.getOriginalFilename());
+            newsletterDTO.setData(file.getBytes());
+            newsletterService.uploadNewsletter(mapToEntity(newsletterDTO));
             return ResponseEntity.ok("Newsletter uploaded successfully.");
         } catch (IOException e) {
             e.printStackTrace();
@@ -48,5 +49,13 @@ public class NewsletterController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // Helper method to map from DTO to entity
+    private Newsletter mapToEntity(NewsletterDTO newsletterDTO) {
+        Newsletter newsletter = new Newsletter();
+        newsletter.setFileName(newsletterDTO.getFileName());
+        newsletter.setData(newsletterDTO.getData());
+        return newsletter;
     }
 }
