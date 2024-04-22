@@ -48,13 +48,15 @@ public class NewsletterController {
                 headers.setContentType(MediaType.APPLICATION_PDF);
                 headers.setContentDispositionFormData("attachment", "nieuwsbrief.pdf");
                 headers.setContentLength(newsletter.getData().length);
-                return new ResponseEntity<>(newsletter.getData(), headers, HttpStatus.OK);
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .body(newsletter.getData());
             } else {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
