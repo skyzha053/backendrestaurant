@@ -23,35 +23,42 @@ public class NewsletterController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadNewsletter(@RequestParam("nieuwsbrief") MultipartFile file) {
-
         try {
             NewsletterDTO newsletterDTO = new NewsletterDTO();
             newsletterDTO.setFileName(file.getOriginalFilename());
             newsletterDTO.setData(file.getBytes());
             newsletterService.uploadNewsletter(mapToEntity(newsletterDTO));
-            return ResponseEntity.ok("Newsletter uploaded successfully.");
+            return ResponseEntity.ok("Nieuwsbrief succesvol geüpload.");
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading newsletter.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Fout bij het uploaden van de nieuwsbrief.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
         }
     }
 
     @GetMapping("/download/latest")
     public ResponseEntity<byte[]> downloadLatestNewsletter() {
-        Optional<Newsletter> latestNewsletter = newsletterService.getLatestNewsletter();
-        if (latestNewsletter.isPresent()) {
-            Newsletter newsletter = latestNewsletter.get();
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("attachment", "nieuwsletter.pdf");
-            headers.setContentLength(newsletter.getData().length);
-            return new ResponseEntity<>(newsletter.getData(), headers, HttpStatus.OK);
-        } else {
-            return ResponseEntity.notFound().build();
+        try {
+            Optional<Newsletter> latestNewsletter = newsletterService.getLatestNewsletter();
+            if (latestNewsletter.isPresent()) {
+                Newsletter newsletter = latestNewsletter.get();
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_PDF);
+                headers.setContentDispositionFormData("attachment", "nieuwsbrief.pdf");
+                headers.setContentLength(newsletter.getData().length);
+                return new ResponseEntity<>(newsletter.getData(), headers, HttpStatus.OK);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
         }
     }
 
-    // Helper method to map from DTO to entity
+
     private Newsletter mapToEntity(NewsletterDTO newsletterDTO) {
         Newsletter newsletter = new Newsletter();
         newsletter.setFileName(newsletterDTO.getFileName());

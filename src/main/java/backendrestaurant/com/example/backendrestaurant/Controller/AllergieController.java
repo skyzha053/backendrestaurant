@@ -1,13 +1,10 @@
-package backendrestaurant.com.example.backendrestaurant.Controller;
-
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
 import backendrestaurant.com.example.backendrestaurant.dtos.AllergieDTO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,16 +55,26 @@ public class AllergieController {
         }
     }
 
-    // Helper method to map Allergie entity to AllergieDTO
+
     private AllergieDTO mapToDTO(Allergie allergie) {
         return new AllergieDTO(allergie.getId(), allergie.getNaam());
     }
 
-    // Helper method to map AllergieDTO to Allergie entity
     private Allergie mapToEntity(AllergieDTO allergieDTO) {
         Allergie allergie = new Allergie();
         allergie.setId(allergieDTO.getId());
         allergie.setNaam(allergieDTO.getNaam());
         return allergie;
+    }
+
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleException(Exception e) {
+
+        e.printStackTrace();
+
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
     }
 }

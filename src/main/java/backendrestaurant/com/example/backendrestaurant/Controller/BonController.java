@@ -30,9 +30,7 @@ public class BonController {
 
         boolean isPaid = bonService.isPaid(tafelId);
         bonText += "\nIs Paid: " + isPaid;
-
         bonService.saveBon(tafelId, isPaid);
-
         return new ResponseEntity<>(bonText, HttpStatus.OK);
     }
 
