@@ -1,19 +1,18 @@
 package backendrestaurant.com.example.backendrestaurant.Controller;
 
+import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
+import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
+import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
+import backendrestaurant.com.example.backendrestaurant.Service.MenuItemService;
+import backendrestaurant.com.example.backendrestaurant.dtos.CheckAllergiesRequestDTO;
+import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemDTO;
+import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-
-import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemDTO;
-import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemResponseDTO;
-import backendrestaurant.com.example.backendrestaurant.dtos.CheckAllergiesRequestDTO;
-import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
-import backendrestaurant.com.example.backendrestaurant.Entiteit.MenuItem;
-import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
-import backendrestaurant.com.example.backendrestaurant.Service.MenuItemService;
 
 @RestController
 @RequestMapping("/menuItems/all")
@@ -26,14 +25,14 @@ public class MenuItemController {
     private AllergieService allergieService;
 
     @GetMapping
-    public ResponseEntity<?> getAllMenuItems() {
+    public ResponseEntity<List<MenuItem>> getAllMenuItems() {
         try {
             List<MenuItem> menuItems = menuItemService.getAllMenuItems();
             return ResponseEntity.ok(menuItems);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -46,7 +45,7 @@ public class MenuItemController {
                 if (!menuItem.isAvailable()) {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item is now unavailable.");
                 } else {
-                    return ResponseEntity.ok().body(menuItem);
+                    return ResponseEntity.ok(menuItem);
                 }
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item not found.");
@@ -54,7 +53,7 @@ public class MenuItemController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -80,7 +79,7 @@ public class MenuItemController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -90,11 +89,11 @@ public class MenuItemController {
             MenuItem updatedMenuItem = mapMenuItemDTOToEntity(updatedMenuItemDTO);
             MenuItem menuItem = menuItemService.updateMenuItem(id, updatedMenuItem);
             MenuItemResponseDTO responseDTO = mapMenuItemToResponseDTO(menuItem);
-            return ResponseEntity.ok().body(responseDTO);
+            return ResponseEntity.ok(responseDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -106,7 +105,7 @@ public class MenuItemController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -116,7 +115,7 @@ public class MenuItemController {
             String result = menuItemService.blockMenuItem(id);
             if (result != null) {
                 if (result.equals("Menu item is now unavailable.")) {
-                    return ResponseEntity.ok().body(result);
+                    return ResponseEntity.ok(result);
                 } else if (result.equals("Menu item is already unavailable.")) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
                 } else {
@@ -128,7 +127,7 @@ public class MenuItemController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -138,7 +137,7 @@ public class MenuItemController {
             String result = menuItemService.unblockMenuItem(id);
             if (result != null) {
                 if (result.equals("Menu item is now available.")) {
-                    return ResponseEntity.ok().body(result);
+                    return ResponseEntity.ok(result);
                 } else if (result.equals("Menu item is already available.")) {
                     return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
                 } else {
@@ -150,7 +149,7 @@ public class MenuItemController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -176,10 +175,9 @@ public class MenuItemController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
-
 
     private MenuItem mapMenuItemDTOToEntity(MenuItemDTO menuItemDTO) {
         MenuItem menuItem = new MenuItem();
@@ -189,7 +187,6 @@ public class MenuItemController {
         menuItem.setAvailable(menuItemDTO.isAvailable());
         return menuItem;
     }
-
 
     private MenuItemResponseDTO mapMenuItemToResponseDTO(MenuItem menuItem) {
         MenuItemResponseDTO responseDTO = new MenuItemResponseDTO();

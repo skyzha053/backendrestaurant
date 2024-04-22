@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,11 +25,11 @@ public class DrankController {
             List<DrankDTO> drankDTOs = dranken.stream()
                     .map(this::mapToDto)
                     .collect(Collectors.toList());
-            return ResponseEntity.ok().body(drankDTOs);
+            return ResponseEntity.ok(drankDTOs);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -38,14 +39,14 @@ public class DrankController {
             Drank drank = drankService.getDrankById(id);
             if (drank != null) {
                 DrankDTO drankDTO = mapToDto(drank);
-                return ResponseEntity.ok().body(drankDTO);
+                return ResponseEntity.ok(drankDTO);
             } else {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -58,7 +59,7 @@ public class DrankController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -70,14 +71,14 @@ public class DrankController {
             Drank drank = drankService.updateDrank(id, updatedDrank);
             if (drank != null) {
                 DrankDTO drankDTO = mapToDto(drank);
-                return ResponseEntity.ok().body(drankDTO);
+                return ResponseEntity.ok(drankDTO);
             } else {
                 return ResponseEntity.notFound().build();
             }
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
@@ -89,7 +90,7 @@ public class DrankController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+                    .body(null);
         }
     }
 
