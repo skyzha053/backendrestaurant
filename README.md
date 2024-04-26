@@ -1,53 +1,45 @@
-# Installatiehandleiding voor Spring Boot-applicatie
 
+# Installatiehandleiding voor Spring Boot-applicatie
 ## 1. Inleiding
 
 Deze handleiding biedt stapsgewijze instructies voor het installeren en configureren van een Spring Boot-applicatie.
 
+
 ## 2. Benodigdheden
 
-    JDK (Java Development Kit)
-    Maven 3.2.4
-    Teksteditor (bijv. IntelliJ IDEA, Eclipse, Visual Studio Code)
-    Een database naar keuze (bijvoorbeeld MySQL, PostgreSQL, H2)
-    Postman, Insomnia (optioneel, voor het testen van REST-endpoints)
-    
-## 3. Installatie instructies (in de vorm van een stappenplan)
+Zorg ervoor dat de volgende benodigdheden zijn geïnstalleerd op de doel-pc:
 
-### Projectstructuur opzetten:
-        Maak een nieuwe map voor je project.
-        Creëer de voorgestelde mappenstructuur zoals beschreven in de handleiding.
+- JDK (Java Development Kit)
+- Maven 3.2.4
+- Een teksteditor (bijv. IntelliJ IDEA, Eclipse, Visual Studio Code)
+- Een database naar keuze (bijvoorbeeld MySQL, PostgreSQL, H2)
+- Postman, Insomnia (optioneel, voor het testen van REST-endpoints)
 
-### Maven POM-bestand aanmaken:
-        Maak een pom.xml-bestand aan in de hoofdmap van je project.
-        Voeg de benodigde Maven-configuratie toe, inclusief de vereiste afhankelijkheden voor je Spring Boot-applicatie.
-        Zorg ervoor dat Maven 3.2.4 wordt gespecificeerd als de versie.
+## 3. Project klonen
 
- ### Database-configuratie in application.properties aanpassen:
-        Open het application.properties-bestand onder src/main/resources/.
-        Pas de databaseconfiguratie aan volgens de specificaties van je gekozen database. Bijvoorbeeld:
+1. Clone het project vanuit de versiebeheerrepository naar de doel-pc.
 
-        spring.datasource.url=jdbc:mysql://localhost:3306/database_naam
-        spring.datasource.username=gebruikersnaam
-        spring.datasource.password=wachtwoord
-        spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+## 4. Projectstructuur opzetten
 
-   ### Implementeer de Spring Boot-applicatie:
-        Schrijf de hoofdklasse Application.java om de Spring Boot-applicatie te starten.
-        Implementeer de benodigde functionaliteit van de applicatie.
+1. Open de gekloonde map van het project op de doel-pc.
+2. Controleer of de voorgestelde mappenstructuur intact is.
 
-### Voeg tests toe (optioneel):
-        Implementeer testklassen onder src/test/java/ om de functionaliteit van de applicatie te testen.
+## 5. Maven POM-bestand aanpassen
 
-    Project importeren in je IDE:
-        Open je favoriete IDE.
-        Importeer het project door de hoofdmap te selecteren.
+1. Controleer of het pom.xml-bestand aanwezig is in de hoofdmap van het project.
+2. Als het pom.xml-bestand ontbreekt, maak er dan een aan en voeg de benodigde Maven-configuratie toe zoals beschreven in de originele handleiding.
 
-### Bouw en voer de applicatie uit:
-        Bouw de applicatie met Maven (mvn clean package).
-        Voer de Spring Boot-applicatie uit (java -jar target/<project-naam>-<versie>.jar).
+## 6. Database-configuratie aanpassen
 
-##4. Testgebruikers
+1. Open het application.properties-bestand onder src/main/resources/.
+2. Pas de databaseconfiguratie aan volgens de specificaties van de doel-pc. Zorg ervoor dat de URL, gebruikersnaam en wachtwoord overeenkomen met de database-instellingen op de doel-pc.
+
+## 7. Importeren in de IDE
+
+1. Open je favoriete IDE op de doel-pc.
+2. Importeer het project door de gekloonde map te selecteren.
+
+## 8. Testgebruikers
 
 | Gebruikersnaam | Wachtwoord  | Rol                |
 |----------------|-------------|--------------------|
@@ -56,11 +48,10 @@ Deze handleiding biedt stapsgewijze instructies voor het installeren en configur
 | Emma           | Novi123     | serveerster        |
 | Chikit         | Novi123     | Chefkok            |
 
-##5. Postman collecties
-   
-[Backend.postman_collection.json](https://github.com/skyzha053/backendrestaurant/files/14804743/Backend.postman_collection.json)
 
-## 6. REST-endpoints
+## 9. Postman collecties
+
+## 10. REST-endpoints
     Swagger UI:
         URL: /swagger-ui.html
         Beschrijving: Swagger UI voor het bekijken en testen van de API-documentatie en -functionaliteit.
@@ -205,7 +196,7 @@ Deze handleiding biedt stapsgewijze instructies voor het installeren en configur
         Methode: POST
         Beschrijving: Uploadt een nieuwsbrief.
 
-## 7. Overige commando’s
+## 11. Overige commando’s
    
 1. **Maven clean:**
    - Commando: `mvn clean`
@@ -231,5 +222,13 @@ Deze handleiding biedt stapsgewijze instructies voor het installeren en configur
    - Commando: `java -jar target/<project-naam>-<versie>.jar`
    - Beschrijving: Start de Spring Boot-applicatie met het gegenereerde JAR-bestand.
 
-Deze commando's kunnen worden gebruikt tijdens het ontwikkelen, debuggen en beheren van de Spring Boot-applicatie om verschillende taken uit te voeren, zoals het bouwen, testen, starten en beheren van de applicatie.
 
+
+### 12. Bouwen en uitvoeren van de applicatie
+
+1. Open een terminal of opdrachtprompt op de doel-pc.
+2. Navigeer naar de hoofdmap van het project.
+3. Voer het Maven-commando uit om de applicatie te bouwen: `mvn clean package`.
+4. Nadat de build succesvol is voltooid, voer je de Spring Boot-applicatie uit met het gegenereerde JAR-bestand: `java -jar target/<project-naam>-versie>.jar`.
+
+Nu zou de Spring Boot-applicatie moeten draaien op de doel-pc zoals geconfigureerd en opgezet volgens de originele installatiehandleiding. Je kunt de API testen met behulp van de beschikbare REST-endpoints en de Postman-collectie. Vergeet niet om eventuele specifieke configuraties aan te passen aan de omgeving van de doel-pc, zoals poorten en database-instellingen.
