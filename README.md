@@ -50,7 +50,7 @@ Zorg ervoor dat de volgende benodigdheden zijn geïnstalleerd op de doel-pc:
 
 
 ## 9. Postman collecties
-
+[Backend.postman_collection.json](..%2FLeerjaar3%2FBackend.postman_collection.json)
 ## 10. REST-endpoints
     Swagger UI:
         URL: /swagger-ui.html
