@@ -16,9 +16,5 @@ public class UserDTOMapper {
         return result;
     }
 
-    public UserModel mapToModel(UserChangePassWordRequestDTO userDTO, Long id) {
-        var result = new UserModel(id);
-        result.setPassword(userDTO.getPassword());
-        return result;
-    }
+
 }
