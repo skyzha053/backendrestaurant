@@ -1,6 +1,5 @@
 package backendrestaurant.com.example.backendrestaurant.dtos;
 
-import org.springframework.web.multipart.MultipartFile;
 
 public class NewsletterDTO {
 

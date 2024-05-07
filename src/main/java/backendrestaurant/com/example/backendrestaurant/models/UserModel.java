@@ -72,7 +72,7 @@ public class UserModel {
 
     public List<String> getRoleNames() {
         return roles.stream()
-                .map(RoleModel::getRoleName) // Converts each Role object to its name
+                .map(RoleModel::getRoleName)
                 .collect(Collectors.toList());
     }
 
