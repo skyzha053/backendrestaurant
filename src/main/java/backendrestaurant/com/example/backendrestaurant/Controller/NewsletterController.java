@@ -8,10 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
 import java.util.Optional;
 
@@ -24,6 +22,9 @@ public class NewsletterController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadNewsletter(@RequestParam("nieuwsbrief") MultipartFile file) {
         try {
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("Upload bestand is leeg.");
+            }
             NewsletterDTO newsletterDTO = new NewsletterDTO();
             newsletterDTO.setFileName(file.getOriginalFilename());
             newsletterDTO.setData(file.getBytes());
@@ -59,7 +60,6 @@ public class NewsletterController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
-
 
     private Newsletter mapToEntity(NewsletterDTO newsletterDTO) {
         Newsletter newsletter = new Newsletter();

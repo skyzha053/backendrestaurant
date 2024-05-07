@@ -2,6 +2,7 @@ package backendrestaurant.com.example.backendrestaurant.Controller;
 
 import backendrestaurant.com.example.backendrestaurant.Service.BonService;
 import backendrestaurant.com.example.backendrestaurant.dtos.BonDTO;
+import backendrestaurant.com.example.backendrestaurant.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class BonController {
         String bonText = bonService.generateBon(tafelId);
 
         if (bonText.startsWith("Geen bestellingen gevonden") || bonText.startsWith("Tafel niet gevonden")) {
-            return new ResponseEntity<>(bonText, HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException(bonText);
         }
 
         boolean isPaid = bonService.isPaid(tafelId);
@@ -46,7 +47,7 @@ public class BonController {
         String bonText = bonService.generateBon(tafelId);
 
         if (bonText.startsWith("Geen bestellingen gevonden") || bonText.startsWith("Tafel niet gevonden")) {
-            return new ResponseEntity<>(bonText, HttpStatus.NOT_FOUND);
+            throw new ResourceNotFoundException(bonText);
         }
 
         boolean isPaid = bonService.isPaid(tafelId);

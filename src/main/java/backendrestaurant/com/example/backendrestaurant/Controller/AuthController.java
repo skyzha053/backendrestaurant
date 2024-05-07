@@ -4,7 +4,7 @@ import backendrestaurant.com.example.backendrestaurant.dtos.UserLoginRequestDTO;
 import backendrestaurant.com.example.backendrestaurant.security.ApiUserDetails;
 import backendrestaurant.com.example.backendrestaurant.security.JwtService;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import backendrestaurant.com.example.backendrestaurant.exception.ResourceNotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -44,7 +44,7 @@ public class AuthController {
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
                     .body("Token generated");
         } catch (AuthenticationException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+            throw new ResourceNotFoundException("Ongeldige gebruikersnaam of wachtwoord.");
         }
     }
 }
