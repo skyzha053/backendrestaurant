@@ -44,6 +44,10 @@ public class BestellingService {
     }
 
 
+    public List<BesteldItem> getAllBestellingen() {
+        return besteldItemRepository.findAll();
+    }
+
     public ResponseEntity<String> plaatsBestelling(BestellingRequest bestellingRequest) {
         String tafelNaam = bestellingRequest.getTafelNaam();
         List<BesteldItem> besteldeMenuItems = bestellingRequest.getBesteldeMenuItems();

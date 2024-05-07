@@ -5,28 +5,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import backendrestaurant.com.example.backendrestaurant.Service.BonService;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.TafelUpdateRequest;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.BestellingRequest;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Tafel;
-import backendrestaurant.com.example.backendrestaurant.Repository.DrankRepository;
-import backendrestaurant.com.example.backendrestaurant.Repository.MenuItemRepository;
-import backendrestaurant.com.example.backendrestaurant.Repository.TafelRepository;
 import backendrestaurant.com.example.backendrestaurant.Service.BestellingService;
 
 @RestController
 public class BestellingController {
 
     @Autowired
-    private TafelRepository tafelRepository;
-
-    @Autowired
-    private MenuItemRepository menuItemRepository;
-
-    @Autowired
-    private DrankRepository drankRepository;
-
-    @Autowired
     private BestellingService bestellingService;
+
+    @Autowired
+    private BonService bonService;
 
     @PostMapping("/bestelling/plaatsen")
     public ResponseEntity<String> plaatsBestelling(@RequestBody BestellingRequest bestellingRequest) {
@@ -69,6 +61,17 @@ public class BestellingController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
+        }
+    }
+
+    @GetMapping("bestelling/{tafelId}")
+    public ResponseEntity<String> generateBon(@PathVariable Long tafelId) {
+        String bonText = bonService.generateBon(tafelId);
+
+        if (bonText.startsWith("Geen bestellingen gevonden") || bonText.startsWith("Tafel niet gevonden")) {
+            return new ResponseEntity<>(bonText, HttpStatus.NOT_FOUND);
+        } else {
+            return new ResponseEntity<>(bonText, HttpStatus.OK);
         }
     }
 }
