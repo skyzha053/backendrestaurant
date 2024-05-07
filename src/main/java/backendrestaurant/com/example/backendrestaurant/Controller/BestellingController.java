@@ -31,7 +31,7 @@ public class BestellingController {
         }
     }
 
-    @PostMapping("/bestelling/tafel-verplaatsen")
+    @PutMapping("/bestelling/tafel-verplaatsen")
     public ResponseEntity<String> updateTafelNaam(@RequestBody TafelUpdateRequest tafelUpdateRequest) {
         try {
             Tafel tafel = bestellingService.updateTafel(
