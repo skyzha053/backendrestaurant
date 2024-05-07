@@ -1,3 +1,4 @@
+package backendrestaurant.com.example.backendrestaurant.Controller;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
 import backendrestaurant.com.example.backendrestaurant.dtos.AllergieDTO;

@@ -2,7 +2,6 @@ package backendrestaurant.com.example.backendrestaurant.Controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import backendrestaurant.com.example.backendrestaurant.dtos.UserChangePassWordRequestDTO;
 import backendrestaurant.com.example.backendrestaurant.dtos.UserDTOMapper;
 import backendrestaurant.com.example.backendrestaurant.dtos.UserRequestDTO;
 import backendrestaurant.com.example.backendrestaurant.helpers.UrlHelper;
@@ -34,13 +33,4 @@ public class UserController {
         return ResponseEntity.created(UrlHelper.getCurrentUrlWithId(request, userModel.getId())).build();
     }
 
-    @PutMapping("/users/{id}")
-    public ResponseEntity<?> ChangePassword(@PathVariable Long id, @RequestBody @Valid UserChangePassWordRequestDTO userDTO)
-    {
-        var userModel = userDTOMapper.mapToModel(userDTO, id);
-        if(!userService.updatePassword(userModel)) {
-            return ResponseEntity.badRequest().build();
-        }
-        return  ResponseEntity.ok().build();
-    }
 }

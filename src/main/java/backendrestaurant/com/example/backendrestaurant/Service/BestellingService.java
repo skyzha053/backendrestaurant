@@ -44,6 +44,7 @@ public class BestellingService {
     }
 
 
+
     public ResponseEntity<String> plaatsBestelling(BestellingRequest bestellingRequest) {
         String tafelNaam = bestellingRequest.getTafelNaam();
         List<BesteldItem> besteldeMenuItems = bestellingRequest.getBesteldeMenuItems();
