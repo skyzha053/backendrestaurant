@@ -7,6 +7,7 @@ import backendrestaurant.com.example.backendrestaurant.Service.MenuItemService;
 import backendrestaurant.com.example.backendrestaurant.dtos.CheckAllergiesRequestDTO;
 import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemDTO;
 import backendrestaurant.com.example.backendrestaurant.dtos.MenuItemResponseDTO;
+import backendrestaurant.com.example.backendrestaurant.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,29 +32,22 @@ public class MenuItemController {
             return ResponseEntity.ok(menuItems);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Fout bij het ophalen van menu-items.");
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getMenuItem(@PathVariable Long id) {
-        try {
-            Optional<MenuItem> optionalMenuItem = menuItemService.getMenuItemById(id);
-            if (optionalMenuItem.isPresent()) {
-                MenuItem menuItem = optionalMenuItem.get();
-                if (!menuItem.isAvailable()) {
-                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item is now unavailable.");
-                } else {
-                    return ResponseEntity.ok(menuItem);
-                }
+        Optional<MenuItem> optionalMenuItem = menuItemService.getMenuItemById(id);
+        if (optionalMenuItem.isPresent()) {
+            MenuItem menuItem = optionalMenuItem.get();
+            if (!menuItem.isAvailable()) {
+                throw new ResourceNotFoundException("Menu item is now unavailable.");
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Menu item not found.");
+                return ResponseEntity.ok(menuItem);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+        } else {
+            throw new ResourceNotFoundException("Menu item not found.");
         }
     }
 
@@ -74,12 +68,11 @@ public class MenuItemController {
                 MenuItemResponseDTO responseDTO = mapMenuItemToResponseDTO(createdMenuItem);
                 return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                throw new ResourceNotFoundException("Fout bij het aanmaken van menu-item.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Fout bij het aanmaken van menu-item.");
         }
     }
 
@@ -88,12 +81,15 @@ public class MenuItemController {
         try {
             MenuItem updatedMenuItem = mapMenuItemDTOToEntity(updatedMenuItemDTO);
             MenuItem menuItem = menuItemService.updateMenuItem(id, updatedMenuItem);
-            MenuItemResponseDTO responseDTO = mapMenuItemToResponseDTO(menuItem);
-            return ResponseEntity.ok(responseDTO);
+            if (menuItem != null) {
+                MenuItemResponseDTO responseDTO = mapMenuItemToResponseDTO(menuItem);
+                return ResponseEntity.ok(responseDTO);
+            } else {
+                throw new ResourceNotFoundException("Menu item not found.");
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Fout bij het bijwerken van menu-item.");
         }
     }
 
@@ -104,8 +100,7 @@ public class MenuItemController {
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Fout bij het verwijderen van menu-item.");
         }
     }
 
@@ -122,12 +117,11 @@ public class MenuItemController {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred.");
+                throw new ResourceNotFoundException("Error occurred.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Error occurred.");
         }
     }
 
@@ -144,12 +138,11 @@ public class MenuItemController {
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
                 }
             } else {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred.");
+                throw new ResourceNotFoundException("Error occurred.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Error occurred.");
         }
     }
 
@@ -170,12 +163,11 @@ public class MenuItemController {
                 }
                 return ResponseEntity.ok(allergenPresenceMap);
             } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyMap());
+                throw new ResourceNotFoundException("Menu item not found.");
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Fout bij het controleren van allergieën in menu-item.");
         }
     }
 

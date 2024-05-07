@@ -1,4 +1,5 @@
 package backendrestaurant.com.example.backendrestaurant.Controller;
+
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
 import backendrestaurant.com.example.backendrestaurant.dtos.AllergieDTO;
@@ -6,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import backendrestaurant.com.example.backendrestaurant.exception.ResourceNotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +35,7 @@ public class AllergieController {
             AllergieDTO allergieDTO = mapToDTO(allergie);
             return ResponseEntity.ok().body(allergieDTO);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Allergie met ID " + id + " niet gevonden.");
         }
     }
 
@@ -52,7 +55,7 @@ public class AllergieController {
             AllergieDTO updatedAllergieDTO = mapToDTO(updatedAllergie);
             return ResponseEntity.ok().body(updatedAllergieDTO);
         } else {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Allergie met ID " + id + " niet gevonden.");
         }
     }
 
@@ -66,16 +69,5 @@ public class AllergieController {
         allergie.setId(allergieDTO.getId());
         allergie.setNaam(allergieDTO.getNaam());
         return allergie;
-    }
-
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-
-        e.printStackTrace();
-
-
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Er is een interne serverfout opgetreden. Probeer het later opnieuw.");
     }
 }

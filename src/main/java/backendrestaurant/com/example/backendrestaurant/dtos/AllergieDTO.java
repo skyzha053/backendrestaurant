@@ -4,7 +4,7 @@ public class AllergieDTO {
     private Long id;
     private String naam;
 
-    // Constructors, getters, and setters
+
 
     public AllergieDTO() {
     }

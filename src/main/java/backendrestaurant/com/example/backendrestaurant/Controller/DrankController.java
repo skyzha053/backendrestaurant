@@ -3,6 +3,7 @@ package backendrestaurant.com.example.backendrestaurant.Controller;
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Drank;
 import backendrestaurant.com.example.backendrestaurant.Service.DrankService;
 import backendrestaurant.com.example.backendrestaurant.dtos.DrankDTO;
+import backendrestaurant.com.example.backendrestaurant.exception.ResourceNotFoundException; // Importeer ResourceNotFoundException
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,58 +28,38 @@ public class DrankController {
                     .collect(Collectors.toList());
             return ResponseEntity.ok(drankDTOs);
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Fout bij het ophalen van dranken.");
         }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<DrankDTO> getDrankById(@PathVariable Long id) {
-        try {
-            Drank drank = drankService.getDrankById(id);
-            if (drank != null) {
-                DrankDTO drankDTO = mapToDto(drank);
-                return ResponseEntity.ok(drankDTO);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+        Drank drank = drankService.getDrankById(id);
+        if (drank != null) {
+            DrankDTO drankDTO = mapToDto(drank);
+            return ResponseEntity.ok(drankDTO);
+        } else {
+            throw new ResourceNotFoundException("Drank met ID " + id + " niet gevonden.");
         }
     }
 
     @PostMapping
     public ResponseEntity<DrankDTO> createDrank(@RequestBody DrankDTO drankDTO) {
-        try {
-            Drank createdDrank = drankService.createDrank(mapToEntity(drankDTO));
-            DrankDTO createdDrankDTO = mapToDto(createdDrank);
-            return ResponseEntity.status(HttpStatus.CREATED).body(createdDrankDTO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
-        }
+        Drank createdDrank = drankService.createDrank(mapToEntity(drankDTO));
+        DrankDTO createdDrankDTO = mapToDto(createdDrank);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdDrankDTO);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<DrankDTO> updateDrank(@PathVariable Long id, @RequestBody DrankDTO updatedDrankDTO) {
-        try {
-            Drank updatedDrank = mapToEntity(updatedDrankDTO);
-            updatedDrank.setId(id);
-            Drank drank = drankService.updateDrank(id, updatedDrank);
-            if (drank != null) {
-                DrankDTO drankDTO = mapToDto(drank);
-                return ResponseEntity.ok(drankDTO);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+        Drank updatedDrank = mapToEntity(updatedDrankDTO);
+        updatedDrank.setId(id);
+        Drank drank = drankService.updateDrank(id, updatedDrank);
+        if (drank != null) {
+            DrankDTO drankDTO = mapToDto(drank);
+            return ResponseEntity.ok(drankDTO);
+        } else {
+            throw new ResourceNotFoundException("Drank met ID " + id + " niet gevonden.");
         }
     }
 
@@ -88,12 +69,9 @@ public class DrankController {
             drankService.deleteDrank(id);
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            throw new ResourceNotFoundException("Fout bij het verwijderen van drank met ID " + id + ".");
         }
     }
-
 
     private Drank mapToEntity(DrankDTO drankDTO) {
         Drank drank = new Drank();

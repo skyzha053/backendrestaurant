@@ -20,6 +20,7 @@ public class ReservationController {
     @Autowired
     private ReservationService reservationService;
 
+    // Endpoint om alle reserveringen op te halen
     @GetMapping
     public ResponseEntity<?> getAllReservations() {
         try {
@@ -39,6 +40,7 @@ public class ReservationController {
         }
     }
 
+    // Endpoint om een nieuwe reservering te maken
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody CreateReservationDTO createReservationDTO) {
         try {
@@ -51,6 +53,7 @@ public class ReservationController {
         }
     }
 
+    // Endpoint om een reservering bij te werken op basis van de naam van de reservering
     @PutMapping("/updateReservationByName/{name}")
     public ResponseEntity<?> updateReservationByName(
             @PathVariable String name,
@@ -71,6 +74,7 @@ public class ReservationController {
         }
     }
 
+    // Endpoint om een reservering te verwijderen op basis van de naam van de reservering
     @DeleteMapping("/deleteByName/{name}")
     public ResponseEntity<?> deleteReservationByName(@PathVariable String name) {
         try {
@@ -88,7 +92,7 @@ public class ReservationController {
         }
     }
 
-    // Helper method to convert entity to DTO
+    // Helper methode om een Entiteit naar DTO te converteren
     private ReservationDTO convertToDTO(Reservation reservation) {
         ReservationDTO reservationDTO = new ReservationDTO();
         reservationDTO.setId(reservation.getId());
@@ -99,7 +103,7 @@ public class ReservationController {
         return reservationDTO;
     }
 
-
+    // Helper methode om CreateReservationDTO naar Entiteit te converteren
     private Reservation convertToEntity(CreateReservationDTO createReservationDTO) {
         Reservation reservation = new Reservation();
         reservation.setName(createReservationDTO.getName());
@@ -109,6 +113,7 @@ public class ReservationController {
         return reservation;
     }
 
+    // Helper methode om UpdateReservationDTO naar Entiteit te converteren
     private Reservation convertToEntity(UpdateReservationDTO updateReservationDTO) {
         Reservation reservation = new Reservation();
         reservation.setReservationDate(updateReservationDTO.getReservationDate());

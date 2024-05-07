@@ -13,7 +13,7 @@ public class ReservationDTO {
     private String emailAddress;
     private String bedrijfsnaam;
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }
