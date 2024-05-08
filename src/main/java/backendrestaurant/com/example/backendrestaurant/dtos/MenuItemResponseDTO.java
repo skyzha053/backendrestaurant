@@ -1,16 +1,19 @@
 package backendrestaurant.com.example.backendrestaurant.dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import java.util.Set;
 
 public class MenuItemResponseDTO {
     private Long id;
+
+    @NotBlank(message = "Naam mag niet leeg zijn")
     private String name;
+
     private String description;
     private double price;
     private boolean available;
     private Set<String> allergens;
 
-    // Constructors, getters, and setters
 
     public MenuItemResponseDTO() {
     }

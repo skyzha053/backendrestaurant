@@ -1,19 +1,36 @@
 package backendrestaurant.com.example.backendrestaurant.dtos;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 public class ReservationDTO {
     private Long id;
+
+    @NotBlank(message = "Naam mag niet leeg zijn")
     private String name;
+
+    @Min(value = 1, message = "Aantal personen moet minimaal 1 zijn")
     private int numberOfPersons;
+
+    @NotNull(message = "Reserveringsdatum mag niet leeg zijn")
     private LocalDate reservationDate;
+
     private String allergies;
     private String comments;
+
+    @Pattern(regexp="(^$|[0-9]{10})", message = "Ongeldig telefoonnummer")
     private String phoneNumber;
+
+    @Email(message = "Ongeldig e-mailadres")
     private String emailAddress;
+
     private String bedrijfsnaam;
 
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
