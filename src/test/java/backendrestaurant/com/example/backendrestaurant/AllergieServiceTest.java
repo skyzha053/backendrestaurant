@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import static org.mockito.Mockito.never;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,7 +27,9 @@ public class AllergieServiceTest {
     @Test
     public void testGetAllAllergieen() {
         List<Allergie> allergieList = new ArrayList<>();
-        allergieList.add(new Allergie());
+        Allergie allergie = new Allergie();
+        allergie.setId(1L);
+        allergieList.add(allergie);
 
         when(allergieRepository.findAll()).thenReturn(allergieList);
 
@@ -69,6 +70,7 @@ public class AllergieServiceTest {
         Allergie existingAllergie = new Allergie();
         existingAllergie.setId(1L);
         Allergie updatedAllergie = new Allergie();
+        updatedAllergie.setId(1L);
 
         when(allergieRepository.findById(1L)).thenReturn(Optional.of(existingAllergie));
         when(allergieRepository.save(updatedAllergie)).thenReturn(updatedAllergie);
@@ -83,8 +85,9 @@ public class AllergieServiceTest {
 
     @Test
     public void testGetByNameWhenAllergenExists() {
-        List<Allergie> allergenList = new ArrayList<>();
         Allergie allergie = new Allergie();
+        allergie.setNaam("Test Allergie");
+        List<Allergie> allergenList = new ArrayList<>();
         allergenList.add(allergie);
 
         when(allergieRepository.findByNaam("Test Allergie")).thenReturn(allergenList);
@@ -136,5 +139,6 @@ public class AllergieServiceTest {
         verify(allergieRepository).findById(1L);
         verify(allergieRepository, never()).save(updatedAllergie);
     }
+
 
 }

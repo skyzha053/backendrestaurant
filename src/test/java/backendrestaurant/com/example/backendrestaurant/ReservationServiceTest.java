@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,55 @@ public class ReservationServiceTest {
         // Assert
         assertFalse(result.isPresent());
     }
+
+    @Test
+    public void testCreateReservation_Integration() {
+        // Arrange
+        Reservation reservation = new Reservation();
+
+        // Mock the behavior of the repository to return the saved reservation
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> {
+            Reservation savedReservation = invocation.getArgument(0);
+            savedReservation.setId(1L); // Assuming an ID is set after saving
+            return savedReservation;
+        });
+
+        // Act
+        Reservation result = reservationService.createReservation(reservation);
+
+        // Assert
+        assertNotNull(result);
+    }
+
+
+    @Test
+    public void testUpdateReservationByName_Integration_ExistingName() {
+        // Arrange
+        String name = "Reservation1";
+        Reservation existingReservation = new Reservation();
+        existingReservation.setName(name);
+        existingReservation.setNumberOfPersons(3); // Set initial number of persons
+
+        Reservation updatedReservation = new Reservation();
+        updatedReservation.setNumberOfPersons(5);
+
+        // Mock the behavior of the repository to return the existing reservation
+        when(reservationRepository.findByName(name)).thenReturn(Optional.of(existingReservation));
+
+        // Mock the behavior of the repository to return the updated reservation after saving
+        when(reservationRepository.save(any(Reservation.class))).thenAnswer(invocation -> {
+            Reservation savedReservation = invocation.getArgument(0);
+            return savedReservation; // Assuming the same instance is returned after saving
+        });
+
+        // Act
+        Reservation result = reservationService.updateReservationByName(name, updatedReservation);
+
+        // Assert
+        assertNotNull(result);
+        assertEquals(updatedReservation.getNumberOfPersons(), result.getNumberOfPersons());
+    }
+
 
     @Test
     public void testCreateReservation() {
