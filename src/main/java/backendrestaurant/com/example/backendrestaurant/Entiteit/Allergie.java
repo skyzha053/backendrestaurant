@@ -18,7 +18,13 @@ public class Allergie {
     @ManyToMany(mappedBy = "allergenen")
     private Set<MenuItem> menuItems = new HashSet<>();
 
+    // No-argument constructor
+    public Allergie() {}
 
+    // Constructor with a String argument
+    public Allergie(String naam) {
+        this.naam = naam;
+    }
 
     public Long getId() {
         return id;
@@ -43,7 +49,6 @@ public class Allergie {
     public void setMenuItems(Set<MenuItem> menuItems) {
         this.menuItems = menuItems;
     }
-
 
     public void addMenuItem(MenuItem menuItem) {
         if (menuItem != null) {

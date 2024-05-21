@@ -1,7 +1,9 @@
-package backendrestaurant.com.example.backendrestaurant.Service;
+package backendrestaurant.com.example.backendrestaurant;
 
 import backendrestaurant.com.example.backendrestaurant.Entiteit.Allergie;
 import backendrestaurant.com.example.backendrestaurant.Repository.AllergieRepository;
+import backendrestaurant.com.example.backendrestaurant.Service.AllergieService;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

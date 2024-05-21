@@ -59,13 +59,13 @@ public class AllergieController {
         }
     }
 
-
     private AllergieDTO mapToDTO(Allergie allergie) {
         return new AllergieDTO(allergie.getId(), allergie.getNaam());
     }
 
     private Allergie mapToEntity(AllergieDTO allergieDTO) {
-        Allergie allergie = new Allergie(allergieDTO.getNaam());
+        Allergie allergie = new Allergie();
+        allergie.setNaam(allergieDTO.getNaam());
         allergie.setId(allergieDTO.getId());
         return allergie;
     }
