@@ -41,20 +41,4 @@ public class BonController {
         return new ResponseEntity<>("Order for Tafel with ID " + tafelId + " is marked as paid.", HttpStatus.OK);
     }
 
-    @PostMapping("/generate")
-    public ResponseEntity<String> generateBon(@RequestBody BonDTO bonDTO) {
-        Long tafelId = bonDTO.getTafelId();
-        String bonText = bonService.generateBon(tafelId);
-
-        if (bonText.startsWith("Geen bestellingen gevonden") || bonText.startsWith("Tafel niet gevonden")) {
-            throw new ResourceNotFoundException(bonText);
-        }
-
-        boolean isPaid = bonService.isPaid(tafelId);
-        bonText += "\nIs Paid: " + isPaid;
-
-        bonService.saveBon(tafelId, isPaid);
-
-        return new ResponseEntity<>(bonText, HttpStatus.OK);
-    }
 }
