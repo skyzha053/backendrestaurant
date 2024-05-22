@@ -76,22 +76,7 @@ public class MenuItemController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateMenuItem(@PathVariable Long id, @RequestBody MenuItemDTO updatedMenuItemDTO) {
-        try {
-            MenuItem updatedMenuItem = mapMenuItemDTOToEntity(updatedMenuItemDTO);
-            MenuItem menuItem = menuItemService.updateMenuItem(id, updatedMenuItem);
-            if (menuItem != null) {
-                MenuItemResponseDTO responseDTO = mapMenuItemToResponseDTO(menuItem);
-                return ResponseEntity.ok(responseDTO);
-            } else {
-                throw new ResourceNotFoundException("Menu item not found.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new ResourceNotFoundException("Fout bij het bijwerken van menu-item.");
-        }
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMenuItem(@PathVariable Long id) {
