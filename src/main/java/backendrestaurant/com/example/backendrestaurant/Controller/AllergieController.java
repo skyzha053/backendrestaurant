@@ -39,14 +39,6 @@ public class AllergieController {
         }
     }
 
-    @PostMapping
-    public ResponseEntity<AllergieDTO> createAllergie(@RequestBody AllergieDTO allergieDTO) {
-        Allergie allergie = mapToEntity(allergieDTO);
-        Allergie createdAllergie = allergieService.createAllergie(allergie);
-        AllergieDTO createdAllergieDTO = mapToDTO(createdAllergie);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdAllergieDTO);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<AllergieDTO> updateAllergie(@PathVariable Long id, @RequestBody AllergieDTO allergieDTO) {
         Allergie allergie = mapToEntity(allergieDTO);
